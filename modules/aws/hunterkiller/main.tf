@@ -402,7 +402,7 @@ data "aws_iam_policy_document" "executor_permissions" {
     condition {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.environment_tag_key}"
-      values   = ["prod", "production"]
+      values   = local.protected_environments
     }
   }
 
@@ -420,7 +420,7 @@ data "aws_iam_policy_document" "executor_permissions" {
     condition {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.environment_tag_key}"
-      values   = ["prod", "production"]
+      values   = local.protected_environments
     }
   }
 
@@ -439,7 +439,7 @@ data "aws_iam_policy_document" "executor_permissions" {
     condition {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.environment_tag_key}"
-      values   = ["prod", "production"]
+      values   = local.protected_environments
     }
   }
 
@@ -455,7 +455,7 @@ data "aws_iam_policy_document" "executor_permissions" {
     condition {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.environment_tag_key}"
-      values   = ["prod", "production"]
+      values   = local.protected_environments
     }
   }
 
@@ -471,7 +471,7 @@ data "aws_iam_policy_document" "executor_permissions" {
     condition {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.environment_tag_key}"
-      values   = ["prod", "production"]
+      values   = local.protected_environments
     }
   }
 
@@ -487,7 +487,7 @@ data "aws_iam_policy_document" "executor_permissions" {
     condition {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.environment_tag_key}"
-      values   = ["prod", "production"]
+      values   = local.protected_environments
     }
   }
 
@@ -520,6 +520,16 @@ data "aws_iam_policy_document" "executor_permissions" {
       var.unrecoverable_teardown ? ["s3:DeleteObject", "s3:DeleteObjectVersion"] : [],
     )
     resources = ["*"]
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.protected_tag_key}"
+      values   = ["true", "yes", "1"]
+    }
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.environment_tag_key}"
+      values   = local.protected_environments
+    }
   }
 
   # S3 — Deny destructive actions on known infrastructure buckets
@@ -555,7 +565,7 @@ data "aws_iam_policy_document" "executor_permissions" {
     condition {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.environment_tag_key}"
-      values   = ["prod", "production"]
+      values   = local.protected_environments
     }
   }
 
@@ -565,10 +575,20 @@ data "aws_iam_policy_document" "executor_permissions" {
     resources = ["*"]
   }
 
-  # SSM Parameter teardown (no ABAC support for DeleteParameter)
+  # SSM Parameter teardown (ABAC)
   statement {
     actions   = ["ssm:DeleteParameter"]
     resources = ["*"]
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.protected_tag_key}"
+      values   = ["true", "yes", "1"]
+    }
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.environment_tag_key}"
+      values   = local.protected_environments
+    }
   }
 
   # ECR repository teardown (ABAC)
@@ -581,6 +601,11 @@ data "aws_iam_policy_document" "executor_permissions" {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.protected_tag_key}"
       values   = ["true", "yes", "1"]
+    }
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.environment_tag_key}"
+      values   = local.protected_environments
     }
   }
 
@@ -597,12 +622,27 @@ data "aws_iam_policy_document" "executor_permissions" {
       variable = "aws:ResourceTag/${local.protected_tag_key}"
       values   = ["true", "yes", "1"]
     }
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.environment_tag_key}"
+      values   = local.protected_environments
+    }
   }
 
-  # CloudWatch Logs teardown
+  # CloudWatch Logs teardown (ABAC)
   statement {
     actions   = ["logs:DeleteLogGroup"]
     resources = ["*"]
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.protected_tag_key}"
+      values   = ["true", "yes", "1"]
+    }
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.environment_tag_key}"
+      values   = local.protected_environments
+    }
   }
 
   # Secrets Manager teardown (ABAC)
@@ -614,6 +654,11 @@ data "aws_iam_policy_document" "executor_permissions" {
       variable = "aws:ResourceTag/${local.protected_tag_key}"
       values   = ["true", "yes", "1"]
     }
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.environment_tag_key}"
+      values   = local.protected_environments
+    }
   }
 
   # KMS teardown (ABAC)
@@ -624,6 +669,11 @@ data "aws_iam_policy_document" "executor_permissions" {
       test     = "StringNotEqualsIgnoreCase"
       variable = "aws:ResourceTag/${local.protected_tag_key}"
       values   = ["true", "yes", "1"]
+    }
+    condition {
+      test     = "StringNotEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.environment_tag_key}"
+      values   = local.protected_environments
     }
   }
 
@@ -680,6 +730,83 @@ data "aws_iam_policy_document" "executor_permissions" {
 
   # The role holds a delete permission only for a resource type that
   # lambda/executor.py has a handler for. Add the permission with the handler.
+
+  # IAM principals the executor never removes, whatever a record says:
+  # service-linked roles, roles that IAM Identity Center reserves, anything
+  # under a protected path, and anything tagged as protected or in a protected
+  # environment (IAM supports the tag condition on roles, users and policies).
+  statement {
+    sid    = "DenyReservedIam"
+    effect = "Deny"
+    actions = [
+      "iam:DeleteRole",
+      "iam:DeleteRolePolicy",
+      "iam:DetachRolePolicy",
+      "iam:RemoveRoleFromInstanceProfile",
+      "iam:DeleteUser",
+      "iam:DeleteUserPolicy",
+      "iam:DetachUserPolicy",
+      "iam:DeleteAccessKey",
+      "iam:DeleteLoginProfile",
+      "iam:RemoveUserFromGroup",
+      "iam:DeactivateMFADevice",
+      "iam:DeletePolicy",
+      "iam:DeletePolicyVersion",
+    ]
+    resources = concat(
+      [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/*",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-reserved/*",
+      ],
+      flatten([
+        for path in var.protected_iam_paths : [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${path}*",
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user${path}*",
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy${path}*",
+        ]
+      ]),
+    )
+  }
+
+  statement {
+    sid    = "DenyProtectedTaggedIam"
+    effect = "Deny"
+    actions = [
+      "iam:DeleteRole",
+      "iam:DeleteRolePolicy",
+      "iam:DetachRolePolicy",
+      "iam:DeleteUser",
+      "iam:DeleteUserPolicy",
+      "iam:DetachUserPolicy",
+      "iam:DeletePolicy",
+    ]
+    resources = ["*"]
+    condition {
+      test     = "StringEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.protected_tag_key}"
+      values   = ["true", "yes", "1"]
+    }
+  }
+
+  statement {
+    sid    = "DenyProtectedEnvironmentIam"
+    effect = "Deny"
+    actions = [
+      "iam:DeleteRole",
+      "iam:DeleteRolePolicy",
+      "iam:DetachRolePolicy",
+      "iam:DeleteUser",
+      "iam:DeleteUserPolicy",
+      "iam:DetachUserPolicy",
+      "iam:DeletePolicy",
+    ]
+    resources = ["*"]
+    condition {
+      test     = "StringEqualsIgnoreCase"
+      variable = "aws:ResourceTag/${local.environment_tag_key}"
+      values   = local.protected_environments
+    }
+  }
 
   # The enforcement pipeline never removes its own parts, whatever a record says.
   statement {

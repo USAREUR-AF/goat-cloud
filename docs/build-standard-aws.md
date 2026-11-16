@@ -175,7 +175,7 @@ The trust policy limits `token.actions.githubusercontent.com:sub` to `repo:<org>
 
 **Why.** Enforcement deletes single resources that have serious findings. Protection is a separate statement that holds even when a resource is approved by mistake.
 
-**How checked.** The dashboard's protected view lists each protected resource; the executor marks a protected resource `protected` and skips it; for EC2, RDS, ECS, Lambda, ElastiCache and load balancers its role also allows deletes only on resources not tagged `Protected`.
+**How checked.** The dashboard's protected view lists each protected resource; the executor marks a protected resource `protected` and skips it; its role also allows deletes only on resources not tagged `Protected`, for every type it can delete except Route 53 zones.
 
 **Mechanism.** [guides/arm-enforcement.md](guides/arm-enforcement.md#protect-what-must-never-be-deleted).
 
