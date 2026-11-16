@@ -86,6 +86,13 @@ The three clouds get the same capabilities, each through its own unit and its ow
 
 Built means the code is complete and usable today. Written means the document or code exists. Designed means the approach is decided and no code exists. [docs/cloud-parity.md](docs/cloud-parity.md) lists every capability with its mechanism on each cloud and the compensating step where a cloud's mechanism is weaker.
 
+Two more targets are designed, not built:
+
+| Target | Unit the contract attaches to | Design |
+|---|---|---|
+| Kubernetes | namespace (labels and annotations) | [docs/design/kubernetes.md](docs/design/kubernetes.md) |
+| Bare metal | device (its inventory record) | [docs/design/bare-metal.md](docs/design/bare-metal.md) |
+
 ![The same capabilities on three clouds, each through its own unit](docs/img/clouds.svg)
 
 ## Scope and non-goals
