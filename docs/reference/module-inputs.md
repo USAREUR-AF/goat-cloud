@@ -121,6 +121,7 @@ Creates the notifier Lambda `<project>-<environment>-hunterkiller`, the state ta
 | `contact_allowed_email_domains` | `list(string)` | `[]` | Mail domains a contact address taken from a resource tag (or an IAM user's Email tag) may be in. A warning for a resource whose contact is outside these domains goes to the admins instead. Empty accepts any domain: anyone who can tag a resource then chooses where its warning email is sent. |
 | `alarm_sns_topic_arn` | `string` | `""` | SNS topic that receives this module's own failure alarms. Empty (the default) creates no alarm: a function that stops or fails is then not reported by this module. The topic's policy must allow cloudwatch.amazonaws.com to publish. |
 | `destroy_now_report_max_age_hours` | `number` | `36` | "Destroy now" acts only on a resource with a HIGH finding in the newest compliance report generated no more than this many hours ago. |
+| `protected_iam_paths` | `list(string)` | `["/admin/"]` | IAM paths under which the executor's role may delete no role, user or policy, in addition to the service-linked (/aws-service-role/) and IAM Identity Center (/aws-reserved/) paths it never touches. Each path starts and ends with /. |
 
 | Output | Description |
 |---|---|

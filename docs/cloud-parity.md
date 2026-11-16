@@ -38,7 +38,7 @@ Built means the code is complete and usable today. Written means the document or
 | Ownership from registered state | Terraform state and Pulumi checkpoints in S3; CloudFormation stacks. | Registry blobs and state in Azure Storage. | Registry objects and state in Cloud Storage. |
 | Cost | Cost Explorer for billed spend, plus price tables for a monthly estimate per resource. | Cost Management query API. | Cloud Billing export in BigQuery. |
 | Tear down an expired unit | Dispatch the owning repository's `teardown.yml` at the stack's expiry. | The same dispatch; the workflow removes the resource group. | The same dispatch; the workflow removes the project. |
-| Delete one resource, with approval | An executor role whose deletes on EC2, RDS, ECS, Lambda, ElastiCache and load balancers are allowed only on resources not tagged `Protected`; other types are protected by the executor's checks and the approval. | An executor role limited to named scopes and a short list of delete operations. | An executor role limited to named projects and a short list of delete permissions. |
+| Delete one resource, with approval | An executor role whose deletes are allowed only on resources not tagged `Protected` and not in a protected environment (all types but Route 53), and denied on reserved and protected IAM principals. | An executor role limited to named scopes and a short list of delete operations. | An executor role limited to named projects and a short list of delete permissions. |
 | Refuse at creation | An AWS Organizations tag policy rendered from the contract. | An Azure Policy initiative rendered from the contract. | Organization policy custom constraints rendered from the contract. |
 <!-- END GENERATED: mechanisms -->
 

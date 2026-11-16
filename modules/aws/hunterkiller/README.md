@@ -5,8 +5,6 @@
 
 Automated compliance enforcement with three-layer safety model: notifier/executor split, DynamoDB approval gate, and Terraform-gated permissions. 24-hour grace period before teardown.
 
-
-
 ## Requirements
 
 | Name | Version |
@@ -28,6 +26,8 @@ Automated compliance enforcement with three-layer safety model: notifier/executo
 |------|------|
 | [aws_cloudwatch_log_group.executor](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_group.notifier](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_cloudwatch_metric_alarm.executor_errors](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.notifier_errors](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_dynamodb_table.state](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table) | resource |
 | [aws_iam_role.executor](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role.notifier](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -55,15 +55,15 @@ Automated compliance enforcement with three-layer safety model: notifier/executo
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_alarm_sns_topic_arn"></a> [alarm\_sns\_topic\_arn](#input\_alarm\_sns\_topic\_arn) | SNS topic that receives this module's own failure alarms. Empty (the default) creates no alarm: a function that stops or fails is then not reported by this module. The topic's policy must allow cloudwatch.amazonaws.com to publish. | `string` | `""` | no |
 | <a name="input_compliance_reports_bucket"></a> [compliance\_reports\_bucket](#input\_compliance\_reports\_bucket) | S3 bucket where the compliance scanner stores JSON reports | `string` | n/a | yes |
 | <a name="input_compliance_scanner_function_name"></a> [compliance\_scanner\_function\_name](#input\_compliance\_scanner\_function\_name) | Name of the compliance scanner Lambda function (for invoke permissions) | `string` | n/a | yes |
-| <a name="input_contact_allowed_email_domains"></a> [contact\_allowed\_email\_domains](#input\_contact\_allowed\_email\_domains) | Mail domains a contact address taken from a resource tag (or an IAM user's Email tag) may be in. A warning for a resource whose contact is outside these domains goes to the admins instead. Empty accepts any domain: anyone who can tag a resource then chooses where its warning email is sent. | `list(string)` | `[]` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | Project name | `string` | n/a | yes |
+| <a name="input_alarm_sns_topic_arn"></a> [alarm\_sns\_topic\_arn](#input\_alarm\_sns\_topic\_arn) | SNS topic that receives this module's own failure alarms. Empty (the default) creates no alarm: a function that stops or fails is then not reported by this module. The topic's policy must allow cloudwatch.amazonaws.com to publish. | `string` | `""` | no |
 | <a name="input_auto_approve_expired"></a> [auto\_approve\_expired](#input\_auto\_approve\_expired) | Approve teardown automatically for resources whose ExpiresAt is in the past. For non-production environments only. | `bool` | `false` | no |
 | <a name="input_bedrock_summary_model_id"></a> [bedrock\_summary\_model\_id](#input\_bedrock\_summary\_model\_id) | Bedrock model or inference-profile id for an LLM-written summary at the top of enforcement emails. Empty (the default) turns the summary off and grants no Bedrock permission. | `string` | `""` | no |
 | <a name="input_bedrock_summary_region"></a> [bedrock\_summary\_region](#input\_bedrock\_summary\_region) | Region of the Bedrock runtime endpoint to call. Empty uses the function's own region. | `string` | `""` | no |
+| <a name="input_contact_allowed_email_domains"></a> [contact\_allowed\_email\_domains](#input\_contact\_allowed\_email\_domains) | Mail domains a contact address taken from a resource tag (or an IAM user's Email tag) may be in. A warning for a resource whose contact is outside these domains goes to the admins instead. Empty accepts any domain: anyone who can tag a resource then chooses where its warning email is sent. | `list(string)` | `[]` | no |
 | <a name="input_contact_tag_keys"></a> [contact\_tag\_keys](#input\_contact\_tag\_keys) | Tag keys to check for direct contact email (checked in order, first non-empty wins). The default reads the contract's Contact tag only; add keys such as OwnerEmail to read others. | `list(string)` | <pre>[<br/>  "Contact"<br/>]</pre> | no |
 | <a name="input_dashboard_url"></a> [dashboard\_url](#input\_dashboard\_url) | URL of the compliance dashboard, linked from warning emails so an owner can object before enforcement | `string` | `""` | no |
 | <a name="input_destroy_now_report_max_age_hours"></a> [destroy\_now\_report\_max\_age\_hours](#input\_destroy\_now\_report\_max\_age\_hours) | "Destroy now" acts only on a resource with a HIGH finding in the newest compliance report generated no more than this many hours ago. | `number` | `36` | no |
@@ -71,6 +71,7 @@ Automated compliance enforcement with three-layer safety model: notifier/executo
 | <a name="input_executor_armed"></a> [executor\_armed](#input\_executor\_armed) | When true, creates the executor Lambda with destructive IAM permissions. Default false — no destructive infrastructure exists. | `bool` | `false` | no |
 | <a name="input_grace_period_hours"></a> [grace\_period\_hours](#input\_grace\_period\_hours) | Hours between the warning and the enforcement action | `number` | `24` | no |
 | <a name="input_protected_environments"></a> [protected\_environments](#input\_protected\_environments) | Environment tag values that are exempt from teardown. Null uses the contract's protected environment names (prod, production) | `list(string)` | `null` | no |
+| <a name="input_protected_iam_paths"></a> [protected\_iam\_paths](#input\_protected\_iam\_paths) | IAM paths under which the executor's role may delete no role, user or policy, in addition to the service-linked (/aws-service-role/) and IAM Identity Center (/aws-reserved/) paths it never touches. Each path starts and ends with /. | `list(string)` | <pre>[<br/>  "/admin/"<br/>]</pre> | no |
 | <a name="input_protected_resource_types"></a> [protected\_resource\_types](#input\_protected\_resource\_types) | Resource types that are always protected from teardown. Require manual action to delete. | `list(string)` | <pre>[<br/>  "route53:hostedzone",<br/>  "payments:payment-instrument",<br/>  "s3:bucket"<br/>]</pre> | no |
 | <a name="input_protected_resources_ssm_name"></a> [protected\_resources\_ssm\_name](#input\_protected\_resources\_ssm\_name) | SSM Parameter Store name containing protected resources JSON. Executor reads at runtime. | `string` | `""` | no |
 | <a name="input_protected_tag_key"></a> [protected\_tag\_key](#input\_protected\_tag\_key) | Tag key that marks a resource as exempt from teardown. Null uses the contract's key for the protected fact (Protected) | `string` | `null` | no |

@@ -100,5 +100,5 @@ path,line,polyline{stroke-linejoin:round}
 <rect x="36" y="336.12" width="203.12" height="34" rx="6" class="bx"/>
 <text x="50" y="356.52" class="t" font-size="13">approved over 24 hours ago</text>
 <text x="20" y="412.52" class="tq" font-size="13" data-role="note">Dry run is the default: the executor logs what it would delete.</text>
-<text x="20" y="430.52" class="tq" font-size="13" data-role="note">On EC2, RDS, ECS, Lambda, ElastiCache and ELB, its role also refuses resources tagged Protected.</text>
+<text x="20" y="430.52" class="tq" font-size="13" data-role="note">Its role also refuses protected-tagged, protected-environment and reserved IAM resources.</text>
 </svg>

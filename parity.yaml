@@ -168,7 +168,7 @@ capabilities:
     name: Delete one resource, with approval
     clouds:
       aws:
-        mechanism: An executor role whose deletes on EC2, RDS, ECS, Lambda, ElastiCache and load balancers are allowed only on resources not tagged `Protected`; other types are protected by the executor's checks and the approval.
+        mechanism: An executor role whose deletes are allowed only on resources not tagged `Protected` and not in a protected environment (all types but Route 53), and denied on reserved and protected IAM principals.
         status: built
         evidence: [modules/aws/hunterkiller]
       azure:

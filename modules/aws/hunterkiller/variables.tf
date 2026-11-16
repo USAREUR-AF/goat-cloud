@@ -145,3 +145,14 @@ variable "destroy_now_report_max_age_hours" {
     error_message = "destroy_now_report_max_age_hours must be between 1 and 168."
   }
 }
+
+variable "protected_iam_paths" {
+  description = "IAM paths under which the executor's role may delete no role, user or policy, in addition to the service-linked (/aws-service-role/) and IAM Identity Center (/aws-reserved/) paths it never touches. Each path starts and ends with /."
+  type        = list(string)
+  default     = ["/admin/"]
+
+  validation {
+    condition     = alltrue([for p in var.protected_iam_paths : can(regex("^/([A-Za-z0-9+=,.@_-]+/)+$", p))])
+    error_message = "Each protected IAM path starts and ends with / (for example /admin/)."
+  }
+}

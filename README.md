@@ -64,7 +64,7 @@ A resource that is unowned or expired does not stay because nobody got to it. It
 |---|---|
 | Expiry | A temporary or experimental resource states when it ends. At that time the owning repository's own teardown workflow is dispatched, so the tool that created the stack removes it |
 | Enforcement | A single resource with a serious finding: a warning to its owner, 24 hours, an administrator's approval, then deletion by an executor that does not exist until an administrator creates it |
-| Gates | Dry run by default. Protected types, protected environments, a `Protected` tag and a protected list each stop a deletion in the executor's code. Its role allows deletes on EC2, RDS, ECS, Lambda, ElastiCache and load balancers only for resources that are not tagged `Protected` and not in a protected environment |
+| Gates | Dry run by default. Protected types, protected environments, a `Protected` tag and a protected list each stop a deletion in the executor's code. Its role allows deletes on EC2, RDS, ECS, Lambda, ElastiCache, load balancers, SSM parameters, log groups, S3 buckets, ECR, EventBridge, Secrets Manager and KMS only for resources not tagged `Protected` and not in a protected environment, and is denied on service-linked, Identity Center and protected-path IAM principals |
 
 ![A resource is deleted only after a warning, an approval and a deliberate arming](docs/img/enforcement.svg)
 
