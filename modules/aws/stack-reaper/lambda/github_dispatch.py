@@ -12,6 +12,7 @@ import urllib.error
 import urllib.request
 
 import boto3
+import rs256
 
 # Cache credentials for the lifetime of the Lambda container
 _cached_credentials = None
@@ -41,55 +42,17 @@ def _base64url(data):
 def _generate_jwt(app_id, private_key_pem):
     """Generate a JWT for GitHub App authentication (RS256).
 
-    Uses a minimal pure-Python RS256 implementation to avoid
-    requiring PyJWT or cryptography in the Lambda zip.
+    Signed in memory by rs256.py: the private key is never written to a file
+    and no other program is run.
     """
-    # We need the cryptography primitives for RSA signing.
-    # Lambda runtime includes hashlib; for RSA we use a minimal approach.
-    # Actually, we'll shell out to openssl or use a vendored approach.
-    # Simplest: use the built-in ssl module's bindings.
-    try:
-        from cryptography.hazmat.primitives import hashes, serialization
-        from cryptography.hazmat.primitives.asymmetric import padding
-
-        private_key = serialization.load_pem_private_key(private_key_pem.encode(), password=None)
-    except ImportError:
-        # Fallback: if cryptography isn't available, try subprocess openssl
-        return _generate_jwt_openssl(app_id, private_key_pem)
-
     now = int(time.time())
     header = json.dumps({"alg": "RS256", "typ": "JWT"}).encode()
     payload = json.dumps({"iat": now - 60, "exp": now + (10 * 60), "iss": str(app_id)}).encode()
 
     signing_input = _base64url(header) + b"." + _base64url(payload)
-    signature = private_key.sign(signing_input, padding.PKCS1v15(), hashes.SHA256())
+    signature = rs256.sign(private_key_pem, signing_input)
 
     return (signing_input + b"." + _base64url(signature)).decode()
-
-
-def _generate_jwt_openssl(app_id, private_key_pem):
-    """Fallback JWT generation using subprocess + openssl."""
-    import subprocess
-    import tempfile
-
-    now = int(time.time())
-    header = json.dumps({"alg": "RS256", "typ": "JWT"}).encode()
-    payload = json.dumps({"iat": now - 60, "exp": now + (10 * 60), "iss": str(app_id)}).encode()
-
-    signing_input = _base64url(header) + b"." + _base64url(payload)
-
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".pem", delete=True) as f:
-        f.write(private_key_pem)
-        f.flush()
-        result = subprocess.run(
-            ["openssl", "dgst", "-sha256", "-sign", f.name],
-            input=signing_input,
-            capture_output=True,
-        )
-        if result.returncode != 0:
-            raise RuntimeError(f"openssl signing failed: {result.stderr.decode()}")
-
-    return (signing_input + b"." + _base64url(result.stdout)).decode()
 
 
 def _get_installation_token(jwt_token, owner, repo):
