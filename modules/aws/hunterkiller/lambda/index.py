@@ -22,7 +22,7 @@ import traceback
 from datetime import UTC, datetime
 
 import boto3
-from compliance_schema import INACTIVE_STATES, TAG_KEYS
+from compliance_schema import INACTIVE_STATES, TAG_KEYS, expiry_required, parse_expires_at
 from compliance_schema import PROTECTED_ENVIRONMENTS as _CONTRACT_PROTECTED_ENVIRONMENTS
 from contact_resolver import resolve_contact
 from notifier import send_warning_emails
@@ -52,6 +52,22 @@ EXECUTOR_ARMED = os.environ.get("EXECUTOR_ARMED", "false").lower() == "true"
 AUTO_APPROVE_EXPIRED = os.environ.get("AUTO_APPROVE_EXPIRED", "false").lower() == "true"
 PROTECTED_RESOURCES_SSM = os.environ.get("PROTECTED_RESOURCES_SSM", "")
 PROTECTED_RESOURCE_TYPES = {t.strip() for t in os.environ.get("PROTECTED_RESOURCE_TYPES", "").split(",") if t.strip()}
+
+
+def _auto_approvable(finding, now):
+    """True when a finding's resource may be approved for teardown without an admin.
+
+    Its tags must declare it temporary: a Lifecycle that requires an expiry
+    (temporary or experiment) and a readable ExpiresAt in the past. A past
+    ExpiresAt alone is not enough: anyone who can tag a resource can set one.
+    """
+    tags = finding.get("tags")
+    if not isinstance(tags, dict):
+        return False
+    if not expiry_required(tags.get(TAG_KEYS["lifecycle"])):
+        return False
+    expiry = parse_expires_at(tags.get(TAG_KEYS["expires_at"]))
+    return expiry is not None and expiry < now
 
 
 def handler(event, context):
@@ -204,20 +220,13 @@ def _handle_warn(state_mgr, scan_date, start_time, min_severity="HIGH"):
     # Step 5b: Auto-approve expired resources (dev/staging only)
     auto_approved = 0
     if AUTO_APPROVE_EXPIRED:
+        now = datetime.now(UTC)
         for f in new_findings:
-            tags = f.get("tags", {})
-            expires_at = tags.get("ExpiresAt", "")
-            if not expires_at:
-                continue
-            try:
-                expiry = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
-                if expiry < datetime.now(UTC):
-                    arn = f["resource_arn"]
-                    state_mgr.update_approval_status(arn, "approved", approved_by="auto:expired")
-                    auto_approved += 1
-                    print(f"  Auto-approved (expired): {arn}")
-            except (ValueError, TypeError):
-                pass
+            if _auto_approvable(f, now):
+                arn = f["resource_arn"]
+                state_mgr.update_approval_status(arn, "approved", approved_by="auto:expired")
+                auto_approved += 1
+                print(f"  Auto-approved (expired): {arn}")
         if auto_approved:
             print(f"Auto-approved {auto_approved} expired resources (AUTO_APPROVE_EXPIRED=true)")
 

@@ -99,7 +99,7 @@ variable "protected_resources_ssm_name" {
 }
 
 variable "auto_approve_expired" {
-  description = "Approve teardown automatically for resources whose ExpiresAt is in the past. For non-production environments only."
+  description = "Approve teardown automatically for resources tagged Lifecycle temporary or experiment whose ExpiresAt is in the past. Anyone who can tag a resource can set these tags, so use it only where every such resource may be removed without review; the protection and current-finding checks still apply."
   type        = bool
   default     = false
 }
