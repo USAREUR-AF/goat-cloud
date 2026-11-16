@@ -123,9 +123,9 @@ variable "tags" {
 }
 
 variable "contact_allowed_email_domains" {
-  description = "Mail domains a contact address taken from a resource tag (or an IAM user's Email tag) may be in. A warning for a resource whose contact is outside these domains goes to the admins instead. Empty accepts any domain: anyone who can tag a resource then chooses where its warning email is sent."
+  description = "Mail domains a contact address taken from a resource tag (or an IAM user's Email tag) may be in. A warning for a resource whose contact is outside these domains goes to the admins instead. Null (the default) uses the domains of ses_admin_emails. An empty list accepts any domain: anyone who can tag a resource then chooses where its warning email is sent."
   type        = list(string)
-  default     = []
+  default     = null
 }
 
 

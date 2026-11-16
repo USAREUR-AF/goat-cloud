@@ -30,6 +30,13 @@ locals {
   protected_tag_key      = coalesce(var.protected_tag_key, local.generated_contract.keys["protected"])
   protected_environments = var.protected_environments == null ? local.generated_contract.protected_values["environment"] : var.protected_environments
 
+  # Contacts taken from tags may be in these mail domains; by default, the
+  # domains of the admin addresses.
+  contact_allowed_domains = var.contact_allowed_email_domains != null ? var.contact_allowed_email_domains : distinct([
+    for address in var.ses_admin_emails : lower(element(split("@", address), length(split("@", address)) - 1))
+    if length(split("@", address)) > 1
+  ])
+
   shared_schema_path   = "${path.module}/../shared/compliance_schema.py"
   shared_contract_path = "${path.module}/../shared/compliance_contract.py"
 
@@ -885,7 +892,7 @@ resource "aws_lambda_function" "notifier" {
       PROTECTED_TAG_KEY        = local.protected_tag_key
       PROTECTED_RESOURCE_TYPES = join(",", var.protected_resource_types)
       CONTACT_TAG_KEYS         = join(",", var.contact_tag_keys)
-      CONTACT_ALLOWED_DOMAINS  = join(",", var.contact_allowed_email_domains)
+      CONTACT_ALLOWED_DOMAINS  = join(",", local.contact_allowed_domains)
       STATE_TTL_DAYS           = tostring(var.state_ttl_days)
       LAMBDA_FUNCTION_NAME     = "${local.name_prefix}-hunterkiller"
       EXECUTOR_FUNCTION_NAME   = var.executor_armed ? "${local.name_prefix}-hunterkiller-executor" : ""
