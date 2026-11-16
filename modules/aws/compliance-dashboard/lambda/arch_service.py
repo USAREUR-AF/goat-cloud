@@ -1045,7 +1045,7 @@ def _page_close():
   tip.className='hint-tip';
   document.body.appendChild(tip);
   document.addEventListener('mouseover',function(e){
-    var h=e.target.closest('.hint');
+    var h=(e.target instanceof Element?e.target:document.documentElement).closest('.hint');
     if(!h){tip.classList.remove('visible');return;}
     tip.textContent=h.getAttribute('data-tip');
     tip.classList.add('visible');
@@ -1058,7 +1058,7 @@ def _page_close():
     tip.style.left=left+'px';
   });
   document.addEventListener('mouseout',function(e){
-    var h=e.target.closest('.hint');
+    var h=(e.target instanceof Element?e.target:document.documentElement).closest('.hint');
     if(h&&!h.contains(e.relatedTarget))tip.classList.remove('visible');
   });
 })()</script>
