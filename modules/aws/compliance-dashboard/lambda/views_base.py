@@ -323,8 +323,8 @@ NAV_CSS_FIXED = (
 # JS for touch/click dropdown toggling (hover doesn't work on mobile)
 _NAV_TOUCH_JS = """<script>(function(){
 document.addEventListener('click',function(e){
-  var label=e.target.closest('.nav-group-label');
-  var pill=e.target.closest('.user-pill');
+  var label=(e.target instanceof Element?e.target:document.documentElement).closest('.nav-group-label');
+  var pill=(e.target instanceof Element?e.target:document.documentElement).closest('.user-pill');
   if(label){
     var g=label.parentElement;
     document.querySelectorAll('.nav-group.open').forEach(function(el){
@@ -341,7 +341,7 @@ document.addEventListener('click',function(e){
       el.classList.remove('open');});
     w.classList.toggle('open');return;
   }
-  if(!e.target.closest('.nav-dropdown')&&!e.target.closest('.user-popup')){
+  if(!(e.target instanceof Element?e.target:document.documentElement).closest('.nav-dropdown')&&!(e.target instanceof Element?e.target:document.documentElement).closest('.user-popup')){
     document.querySelectorAll('.nav-group.open,.user-widget.open').forEach(function(el){
       el.classList.remove('open');});
   }
@@ -798,7 +798,7 @@ def _layout(title, content, user_email="", active_page="dashboard"):
   tip.className='hint-tip';
   document.body.appendChild(tip);
   document.addEventListener('mouseenter',function(e){{
-    var h=e.target.closest('.hint');
+    var h=(e.target instanceof Element?e.target:document.documentElement).closest('.hint');
     if(!h)return;
     tip.textContent=h.getAttribute('data-tip');
     tip.classList.add('visible');
@@ -812,7 +812,7 @@ def _layout(title, content, user_email="", active_page="dashboard"):
     tip.style.left=left+'px';
   }},true);
   document.addEventListener('mouseleave',function(e){{
-    if(e.target.closest('.hint')) tip.classList.remove('visible');
+    if((e.target instanceof Element?e.target:document.documentElement).closest('.hint')) tip.classList.remove('visible');
   }},true);
   window.addEventListener('scroll',function(){{tip.classList.remove('visible');}},true);
 }})()</script>

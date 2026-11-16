@@ -193,7 +193,7 @@ HINT_JS = """<script>(function(){
   tip.className='hint-tip';
   document.body.appendChild(tip);
   document.addEventListener('mouseenter',function(e){
-    var h=e.target.closest('.hint');
+    var h=(e.target instanceof Element?e.target:document.documentElement).closest('.hint');
     if(!h)return;
     tip.textContent=h.getAttribute('data-tip');
     tip.classList.add('visible');
@@ -206,7 +206,7 @@ HINT_JS = """<script>(function(){
     tip.style.left=left+'px';
   },true);
   document.addEventListener('mouseleave',function(e){
-    if(e.target.closest('.hint')) tip.classList.remove('visible');
+    if((e.target instanceof Element?e.target:document.documentElement).closest('.hint')) tip.classList.remove('visible');
   },true);
 })()</script>"""
 
