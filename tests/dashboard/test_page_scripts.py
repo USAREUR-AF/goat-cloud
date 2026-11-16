@@ -50,7 +50,11 @@ console.log(calls);
 
 
 def _js(script_html):
-    return re.sub(r"^<script>|</script>$", "", script_html.strip())
+    """The JavaScript inside one <script>...</script> block."""
+    text = script_html.strip()
+    opening, closing = "<script>", "</script>"
+    assert text.startswith(opening) and text.endswith(closing)
+    return text[len(opening) : -len(closing)]
 
 
 def _run(script_html):
