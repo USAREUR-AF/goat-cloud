@@ -1,5 +1,7 @@
 # compliance-labels
 
+**Status: new.** AWS support is demonstrated and stable; Azure and Google Cloud support is new and may change between releases.
+
 Renders the tag contract's facts as Google Cloud labels for
 `provider "google" { default_labels }`. The mapping, the label rules, the
 expiry encoding and its decoding rule are in [../README.md](../README.md).

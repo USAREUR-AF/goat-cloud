@@ -1,5 +1,7 @@
 # iac-registry
 
+**Status: new.** AWS support is demonstrated and stable; Azure and Google Cloud support is new and may change between releases.
+
 Writes a repository's registry entry as the object
 `iac-registry/<repo_slug>.json` in its Cloud Storage state bucket. The bucket
 must carry the label `role=iac-registry`. The payload and the mapping to the
