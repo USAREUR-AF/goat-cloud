@@ -1,0 +1,103 @@
+# Reusable compliance check workflow — validates IaC tag compliance
+# before deploy. Called by external repos:
+#
+#   uses: <owner>/<this-repository>/.github/workflows/compliance-check.yml@<tag>
+#   with:
+#     iac_type: serverless
+#     aws_region: eu-west-1
+#     lint_script_s3: s3://<bucket>/compliance-lint.py
+#     lint_script_sha256: <sha256 of that script>
+#     contract_s3: s3://<bucket>/compliance-contract.json
+#   secrets:
+#     AWS_OIDC_ROLE: ${{ secrets.AWS_OIDC_ROLE }}
+
+name: Compliance Check
+
+on:
+  workflow_call:
+    inputs:
+      iac_type:
+        description: "IaC type: terraform, serverless, pulumi, cdk"
+        required: true
+        type: string
+      path:
+        description: "Path to check (default: repo root)"
+        required: false
+        type: string
+        default: "."
+      aws_region:
+        description: "AWS region"
+        required: true
+        type: string
+      lint_script_s3:
+        description: "S3 URL of the compliance lint script (s3://bucket/key)"
+        required: true
+        type: string
+      lint_script_sha256:
+        description: "SHA-256 of the lint script. The downloaded script runs only when it matches. When empty, the repository or organization variable COMPLIANCE_LINT_SHA256 is used; with neither, the job fails."
+        required: false
+        type: string
+        default: ""
+      contract_s3:
+        description: "S3 URL of the compliance contract JSON (s3://bucket/key)"
+        required: true
+        type: string
+    secrets:
+      AWS_OIDC_ROLE:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Compliance lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      id-token: write # exchange the job's OIDC token for the caller's cloud role
+      contents: read # check out the caller's repository
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install boto3==1.35.81 pyyaml==6.0.2
+
+      - name: Fetch and verify compliance lint script
+        env:
+          COMPLIANCE_LINT_SHA256: ${{ inputs.lint_script_sha256 || vars.COMPLIANCE_LINT_SHA256 }}
+          LINT_SCRIPT_S3: ${{ inputs.lint_script_s3 }}
+        run: |
+          # The script runs with the assumed cloud role, so it runs only when
+          # its hash matches the one the caller pinned.
+          if ! printf '%s' "$COMPLIANCE_LINT_SHA256" | grep -Eq '^[0-9a-f]{64}$'; then
+            echo "::error::No SHA-256 pinned for the lint script. Pass lint_script_sha256, or set the COMPLIANCE_LINT_SHA256 variable."
+            exit 1
+          fi
+          # Outside the checkout: the caller's files must not sit beside it.
+          aws s3 cp "$LINT_SCRIPT_S3" "$RUNNER_TEMP/compliance_lint.py"
+          echo "$COMPLIANCE_LINT_SHA256  $RUNNER_TEMP/compliance_lint.py" | sha256sum -c -
+
+      - name: Run compliance check
+        env:
+          IAC_TYPE: ${{ inputs.iac_type }}
+          LINT_PATH: ${{ inputs.path }}
+          CONTRACT_S3: ${{ inputs.contract_s3 }}
+        run: |
+          # -I: no module is imported from the checkout, the script's
+          # directory, PYTHONPATH or the user site.
+          python -I "$RUNNER_TEMP/compliance_lint.py" \
+            --iac-type "$IAC_TYPE" \
+            --path "$LINT_PATH" \
+            --contract-s3 "$CONTRACT_S3"

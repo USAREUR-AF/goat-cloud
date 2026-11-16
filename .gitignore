@@ -1,0 +1,68 @@
+# Terraform (modules ship no provider lock file; a root module keeps its own)
+.terraform/
+modules/**/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform plan files hold resolved values, including secrets
+tfplan
+*.tfplan
+plan.out
+*.plan
+
+# Local environment
+.envrc.local
+.env
+.env.*
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# Keys
+*.pem
+*.key
+
+# Lambda packages, built at plan time
+*.zip
+
+# Files copied into Lambda directories at build time (sources: modules/aws/shared/,
+# and the directory given as site_config_dir)
+modules/aws/compliance-scanner/lambda/compliance_schema.py
+modules/aws/compliance-scanner/lambda/compliance_contract.py
+modules/aws/compliance-scanner/lambda/delta.py
+modules/aws/compliance-scanner/lambda/iac_registry.py
+modules/aws/compliance-dashboard/lambda/compliance_schema.py
+modules/aws/compliance-dashboard/lambda/compliance_contract.py
+modules/aws/compliance-dashboard/lambda/delta.py
+modules/aws/compliance-dashboard/lambda/site/
+modules/aws/hunterkiller/lambda/compliance_schema.py
+modules/aws/hunterkiller/lambda/compliance_contract.py
+modules/aws/stack-reaper/lambda/compliance_schema.py
+modules/aws/stack-reaper/lambda/compliance_contract.py
+modules/aws/stack-reaper/lambda/iac_registry.py
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+coverage.xml
+.coverage
+htmlcov/
+.hypothesis/
+
+# Report data downloaded for a local dashboard run
+local_data/

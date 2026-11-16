@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 426" width="760" height="426" role="img" aria-label="The contract attaches to the resource on AWS, the resource group on Azure and the project on Google Cloud; a build standard is written and a read-only scan and report is built on all three; ownership from state, cost, teardown and enforcement are built on AWS and designed on Azure and Google Cloud">
+<title>The contract attaches to the resource on AWS, the resource group on Azure and the project on Google Cloud; a build standard is written and a read-only scan and report is built on all three; ownership from state, cost, teardown and enforcement are built on AWS and designed on Azure and Google Cloud</title>
+<style>
+text{font-family:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif}
+.bg{fill:#ffffff}
+.t { fill:#191c22; } .tq { fill:#555c68; } .ta { fill:#0b5a72; } .tg { fill:#2a6a35; }
+.tw { fill:#875200; } .ti { fill:#285d9e; } .tc { fill:#b0261d; } .tm { fill:#5a606a; }
+.ton { fill:#ffffff; }
+.bx { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; } .bxp { fill:#f5f6f8; stroke:#dde1e6; stroke-width:1.25; }
+.bxa { fill:#e2f0f4; stroke:#0b5a72; stroke-width:1.25; } .bxg { fill:#e4f3e6; stroke:#2a6a35; stroke-width:1.25; }
+.bxw { fill:#fcf0d7; stroke:#875200; stroke-width:1.25; } .bxi { fill:#e6eff9; stroke:#285d9e; stroke-width:1.25; }
+.bxc { fill:#fbeae8; stroke:#b0261d; stroke-width:1.25; } .bxm { fill:#efeeeb; stroke:#5a606a; stroke-width:1.25; }
+.bxd { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#878f9c; stroke-width:1.25; fill:none; } .lna { stroke:#0b5a72; stroke-width:2; fill:none; }
+.lng { stroke:#2a6a35; stroke-width:2; fill:none; } .lnw { stroke:#875200; stroke-width:2; fill:none; }
+.lnd { stroke:#878f9c; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#2a6a35; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#dde1e6; stroke-width:1; fill:none; }
+.lnx { stroke:#b0261d; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#0b5a72; } .fg { fill:#2a6a35; } .fl { fill:#878f9c; } .fw { fill:#875200; }
+.fi { fill:#285d9e; } .fc { fill:#b0261d; } .fm { fill:#5a606a; } .fp { fill:#f5f6f8; }
+.fs { fill:#e2f0f4; }
+path,line,polyline{stroke-linejoin:round}
+@media (prefers-color-scheme: dark){
+.bg{fill:#121417}
+.t { fill:#e7e9ec; } .tq { fill:#a5acb7; } .ta { fill:#6cc3da; } .tg { fill:#6fc480; }
+.tw { fill:#e2b04e; } .ti { fill:#86b3ea; } .tc { fill:#f08b80; } .tm { fill:#9ba2ac; }
+.ton { fill:#121417; }
+.bx { fill:#121417; stroke:#7b8592; stroke-width:1.25; } .bxp { fill:#1a1d21; stroke:#30363e; stroke-width:1.25; }
+.bxa { fill:#14303a; stroke:#6cc3da; stroke-width:1.25; } .bxg { fill:#1b2e20; stroke:#6fc480; stroke-width:1.25; }
+.bxw { fill:#32291a; stroke:#e2b04e; stroke-width:1.25; } .bxi { fill:#1a2636; stroke:#86b3ea; stroke-width:1.25; }
+.bxc { fill:#3a1f1f; stroke:#f08b80; stroke-width:1.25; } .bxm { fill:#24262b; stroke:#9ba2ac; stroke-width:1.25; }
+.bxd { fill:#121417; stroke:#7b8592; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#7b8592; stroke-width:1.25; fill:none; } .lna { stroke:#6cc3da; stroke-width:2; fill:none; }
+.lng { stroke:#6fc480; stroke-width:2; fill:none; } .lnw { stroke:#e2b04e; stroke-width:2; fill:none; }
+.lnd { stroke:#7b8592; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#6fc480; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#30363e; stroke-width:1; fill:none; }
+.lnx { stroke:#f08b80; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#6cc3da; } .fg { fill:#6fc480; } .fl { fill:#7b8592; } .fw { fill:#e2b04e; }
+.fi { fill:#86b3ea; } .fc { fill:#f08b80; } .fm { fill:#9ba2ac; } .fp { fill:#1a1d21; }
+.fs { fill:#14303a; }
+}
+</style>
+<rect class="bg" width="760" height="426" rx="10"/>
+<text x="20" y="36" class="t" font-size="18" font-weight="700" data-role="title">The same capabilities on three clouds, each through its own unit</text>
+<rect x="20" y="56" width="235" height="36" rx="8" class="bxp"/>
+<rect x="260" y="56" width="156.67" height="36" rx="8" class="bxp"/>
+<text x="276" y="78" class="t" font-size="15" font-weight="700">AWS</text>
+<rect x="421.67" y="56" width="156.67" height="36" rx="8" class="bxp"/>
+<text x="437.67" y="78" class="t" font-size="15" font-weight="700">Azure</text>
+<rect x="583.33" y="56" width="156.67" height="36" rx="8" class="bxp"/>
+<text x="599.33" y="78" class="t" font-size="15" font-weight="700">Google Cloud</text>
+<rect x="20" y="97" width="235" height="56" rx="8" class="bx"/>
+<text x="36" y="119" class="t" font-size="15" font-weight="700">Unit that carries</text>
+<text x="36" y="139" class="t" font-size="15" font-weight="700">the contract</text>
+<rect x="260" y="97" width="156.67" height="56" rx="8" class="bxa"/>
+<text x="276" y="129" class="t" font-size="15" font-weight="700">Resource</text>
+<rect x="421.67" y="97" width="156.67" height="56" rx="8" class="bxa"/>
+<text x="437.67" y="129" class="t" font-size="15" font-weight="700">Resource group</text>
+<rect x="583.33" y="97" width="156.67" height="56" rx="8" class="bxa"/>
+<text x="599.33" y="129" class="t" font-size="15" font-weight="700">Project</text>
+<rect x="20" y="158" width="235" height="36" rx="8" class="bx"/>
+<text x="36" y="180" class="t" font-size="15" font-weight="700">Build standard</text>
+<rect x="260" y="158" width="156.67" height="36" rx="8" class="bxi"/>
+<text x="276" y="179.4" class="tq" font-size="13">Written</text>
+<rect x="421.67" y="158" width="156.67" height="36" rx="8" class="bxi"/>
+<text x="437.67" y="179.4" class="tq" font-size="13">Written</text>
+<rect x="583.33" y="158" width="156.67" height="36" rx="8" class="bxi"/>
+<text x="599.33" y="179.4" class="tq" font-size="13">Written</text>
+<rect x="20" y="199" width="235" height="36" rx="8" class="bx"/>
+<text x="36" y="221" class="t" font-size="15" font-weight="700">Scan and report</text>
+<rect x="260" y="199" width="156.67" height="36" rx="8" class="bxg"/>
+<text x="276" y="220.4" class="tq" font-size="13">Built</text>
+<rect x="421.67" y="199" width="156.67" height="36" rx="8" class="bxg"/>
+<text x="437.67" y="220.4" class="tq" font-size="13">Built</text>
+<rect x="583.33" y="199" width="156.67" height="36" rx="8" class="bxg"/>
+<text x="599.33" y="220.4" class="tq" font-size="13">Built</text>
+<rect x="20" y="240" width="235" height="36" rx="8" class="bx"/>
+<text x="36" y="262" class="t" font-size="15" font-weight="700">Ownership from state</text>
+<rect x="260" y="240" width="156.67" height="36" rx="8" class="bxg"/>
+<text x="276" y="261.4" class="tq" font-size="13">Built</text>
+<rect x="421.67" y="240" width="156.67" height="36" rx="8" class="bxd"/>
+<text x="437.67" y="261.4" class="tq" font-size="13">Designed</text>
+<rect x="583.33" y="240" width="156.67" height="36" rx="8" class="bxd"/>
+<text x="599.33" y="261.4" class="tq" font-size="13">Designed</text>
+<rect x="20" y="281" width="235" height="36" rx="8" class="bx"/>
+<text x="36" y="303" class="t" font-size="15" font-weight="700">Cost</text>
+<rect x="260" y="281" width="156.67" height="36" rx="8" class="bxg"/>
+<text x="276" y="302.4" class="tq" font-size="13">Built</text>
+<rect x="421.67" y="281" width="156.67" height="36" rx="8" class="bxd"/>
+<text x="437.67" y="302.4" class="tq" font-size="13">Designed</text>
+<rect x="583.33" y="281" width="156.67" height="36" rx="8" class="bxd"/>
+<text x="599.33" y="302.4" class="tq" font-size="13">Designed</text>
+<rect x="20" y="322" width="235" height="56" rx="8" class="bx"/>
+<text x="36" y="344" class="t" font-size="15" font-weight="700">Teardown and</text>
+<text x="36" y="364" class="t" font-size="15" font-weight="700">enforcement</text>
+<rect x="260" y="322" width="156.67" height="56" rx="8" class="bxg"/>
+<text x="276" y="353.4" class="tq" font-size="13">Built</text>
+<rect x="421.67" y="322" width="156.67" height="56" rx="8" class="bxd"/>
+<text x="437.67" y="353.4" class="tq" font-size="13">Designed</text>
+<rect x="583.33" y="322" width="156.67" height="56" rx="8" class="bxd"/>
+<text x="599.33" y="353.4" class="tq" font-size="13">Designed</text>
+<text x="20" y="402.4" class="tq" font-size="13" data-role="note">Built: complete and usable today. Written: the document exists. Designed: decided, no code.</text>
+</svg>

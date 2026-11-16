@@ -1,0 +1,14 @@
+pytest>=8.0
+pytest-cov>=6.0
+moto[dynamodb,s3]>=5.0
+# adapters/gcp: the Cloud Asset Inventory client. Its tests build response
+# types offline and call no API.
+google-cloud-asset>=4.0
+# adapters/gcp reads adapters/gcp/resource_types.yaml
+pyyaml>=6.0
+# Signs test identity tokens the way a load balancer does (tests/factories.py).
+cryptography>=42.0
+# Pinned to one exact version, so local runs and CI format the same way.
+ruff==0.9.10
+# scripts/contract-gen reads contract/contract.yaml
+pyyaml>=6.0

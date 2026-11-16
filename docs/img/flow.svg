@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 345" width="760" height="345" role="img" aria-label="Repositories tag their resources and register where their state lives; a nightly scanner reads the account, the registry and each state and writes one report; the dashboard and the enforcement notifier read that report; expiry teardown asks the owning repository to destroy its own stack">
+<title>Repositories tag their resources and register where their state lives; a nightly scanner reads the account, the registry and each state and writes one report; the dashboard and the enforcement notifier read that report; expiry teardown asks the owning repository to destroy its own stack</title>
+<style>
+text{font-family:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif}
+.bg{fill:#ffffff}
+.t { fill:#191c22; } .tq { fill:#555c68; } .ta { fill:#0b5a72; } .tg { fill:#2a6a35; }
+.tw { fill:#875200; } .ti { fill:#285d9e; } .tc { fill:#b0261d; } .tm { fill:#5a606a; }
+.ton { fill:#ffffff; }
+.bx { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; } .bxp { fill:#f5f6f8; stroke:#dde1e6; stroke-width:1.25; }
+.bxa { fill:#e2f0f4; stroke:#0b5a72; stroke-width:1.25; } .bxg { fill:#e4f3e6; stroke:#2a6a35; stroke-width:1.25; }
+.bxw { fill:#fcf0d7; stroke:#875200; stroke-width:1.25; } .bxi { fill:#e6eff9; stroke:#285d9e; stroke-width:1.25; }
+.bxc { fill:#fbeae8; stroke:#b0261d; stroke-width:1.25; } .bxm { fill:#efeeeb; stroke:#5a606a; stroke-width:1.25; }
+.bxd { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#878f9c; stroke-width:1.25; fill:none; } .lna { stroke:#0b5a72; stroke-width:2; fill:none; }
+.lng { stroke:#2a6a35; stroke-width:2; fill:none; } .lnw { stroke:#875200; stroke-width:2; fill:none; }
+.lnd { stroke:#878f9c; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#2a6a35; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#dde1e6; stroke-width:1; fill:none; }
+.lnx { stroke:#b0261d; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#0b5a72; } .fg { fill:#2a6a35; } .fl { fill:#878f9c; } .fw { fill:#875200; }
+.fi { fill:#285d9e; } .fc { fill:#b0261d; } .fm { fill:#5a606a; } .fp { fill:#f5f6f8; }
+.fs { fill:#e2f0f4; }
+path,line,polyline{stroke-linejoin:round}
+@media (prefers-color-scheme: dark){
+.bg{fill:#121417}
+.t { fill:#e7e9ec; } .tq { fill:#a5acb7; } .ta { fill:#6cc3da; } .tg { fill:#6fc480; }
+.tw { fill:#e2b04e; } .ti { fill:#86b3ea; } .tc { fill:#f08b80; } .tm { fill:#9ba2ac; }
+.ton { fill:#121417; }
+.bx { fill:#121417; stroke:#7b8592; stroke-width:1.25; } .bxp { fill:#1a1d21; stroke:#30363e; stroke-width:1.25; }
+.bxa { fill:#14303a; stroke:#6cc3da; stroke-width:1.25; } .bxg { fill:#1b2e20; stroke:#6fc480; stroke-width:1.25; }
+.bxw { fill:#32291a; stroke:#e2b04e; stroke-width:1.25; } .bxi { fill:#1a2636; stroke:#86b3ea; stroke-width:1.25; }
+.bxc { fill:#3a1f1f; stroke:#f08b80; stroke-width:1.25; } .bxm { fill:#24262b; stroke:#9ba2ac; stroke-width:1.25; }
+.bxd { fill:#121417; stroke:#7b8592; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#7b8592; stroke-width:1.25; fill:none; } .lna { stroke:#6cc3da; stroke-width:2; fill:none; }
+.lng { stroke:#6fc480; stroke-width:2; fill:none; } .lnw { stroke:#e2b04e; stroke-width:2; fill:none; }
+.lnd { stroke:#7b8592; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#6fc480; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#30363e; stroke-width:1; fill:none; }
+.lnx { stroke:#f08b80; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#6cc3da; } .fg { fill:#6fc480; } .fl { fill:#7b8592; } .fw { fill:#e2b04e; }
+.fi { fill:#86b3ea; } .fc { fill:#f08b80; } .fm { fill:#9ba2ac; } .fp { fill:#1a1d21; }
+.fs { fill:#14303a; }
+}
+</style>
+<rect class="bg" width="760" height="345" rx="10"/>
+<text x="20" y="36" class="t" font-size="18" font-weight="700" data-role="title">Each night the scanner compares what exists with what repositories claim</text>
+<rect x="20" y="56" width="159" height="102" rx="8" class="bx"/>
+<text x="36" y="82" class="t" font-size="15" font-weight="700">Repositories</text>
+<text x="36" y="104" class="tq" font-size="13">tag every resource;</text>
+<text x="36" y="122" class="tq" font-size="13">register where</text>
+<text x="36" y="140" class="tq" font-size="13">their state lives</text>
+<rect x="207" y="56" width="159" height="102" rx="8" class="bx"/>
+<text x="223" y="82" class="t" font-size="15" font-weight="700">Cloud account</text>
+<text x="223" y="104" class="tq" font-size="13">resources, registry</text>
+<text x="223" y="122" class="tq" font-size="13">entries, IaC state</text>
+<rect x="394" y="56" width="159" height="102" rx="8" class="bxa"/>
+<text x="410" y="82" class="t" font-size="15" font-weight="700">Scanner</text>
+<text x="410" y="104" class="tq" font-size="13">nightly: inventory,</text>
+<text x="410" y="122" class="tq" font-size="13">tags, state, cost</text>
+<rect x="581" y="56" width="159" height="102" rx="8" class="bx"/>
+<text x="597" y="82" class="t" font-size="15" font-weight="700">Report</text>
+<text x="597" y="104" class="tq" font-size="13">JSON and HTML,</text>
+<text x="597" y="122" class="tq" font-size="13">mailed and stored</text>
+<path d="M179 107L198.25 107" class="ln"/><path d="M206.25 107L197.25 111.5L197.25 102.5z" class="fl"/>
+<path d="M366 107L385.25 107" class="ln"/><path d="M393.25 107L384.25 111.5L384.25 102.5z" class="fl"/>
+<path d="M553 107L572.25 107" class="ln"/><path d="M580.25 107L571.25 111.5L571.25 102.5z" class="fl"/>
+<rect x="207" y="222" width="159" height="102" rx="8" class="bx"/>
+<text x="223" y="248" class="t" font-size="15" font-weight="700">Expiry teardown</text>
+<text x="223" y="270" class="tq" font-size="13">schedules</text>
+<text x="223" y="288" class="tq" font-size="13">each stack at</text>
+<text x="223" y="306" class="tq" font-size="13">its expiry time</text>
+<rect x="394" y="222" width="159" height="102" rx="8" class="bx"/>
+<text x="410" y="248" class="t" font-size="15" font-weight="700">Enforcement</text>
+<text x="410" y="270" class="tq" font-size="13">warn, approve, then</text>
+<text x="410" y="288" class="tq" font-size="13">delete one resource</text>
+<rect x="581" y="222" width="159" height="102" rx="8" class="bx"/>
+<text x="597" y="248" class="t" font-size="15" font-weight="700">Dashboard</text>
+<text x="597" y="270" class="tq" font-size="13">findings, cost,</text>
+<text x="597" y="288" class="tq" font-size="13">changes, approvals</text>
+<path d="M286.5 158L286.5 213.25" class="ln"/><path d="M286.5 221.25L282 212.25L291 212.25z" class="fl"/>
+<text x="296.5" y="194.12" class="tq" font-size="13" font-weight="700">expiry tags</text>
+<path d="M660.5 158L660.5 213.25" class="ln"/><path d="M660.5 221.25L656 212.25L665 212.25z" class="fl"/>
+<path d="M605 158L605 188L473.5 188L473.5 213.25" class="ln"/><path d="M473.5 221.25L469 212.25L478 212.25z" class="fl"/>
+<path d="M207 273L99.5 273L99.5 167.75" class="lna"/><path d="M99.5 158.75L104.5 168.75L94.5 168.75z" class="fa"/>
+<text x="20" y="303" class="tq" font-size="13" font-weight="700">runs the repository&#x27;s</text>
+<text x="20" y="321" class="tq" font-size="13" font-weight="700">own teardown workflow</text>
+</svg>

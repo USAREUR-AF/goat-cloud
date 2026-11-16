@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+"""Render docs/cloud-parity.md tables from parity.yaml.
+
+    scripts/parity-gen                    write the generated blocks into the page
+    scripts/parity-gen --check            exit 1 when the page differs from the data
+    scripts/parity-gen --verify-evidence  also require every evidence path to exist
+
+The page keeps its prose. Only the text between
+`<!-- BEGIN GENERATED: <name> -->` and `<!-- END GENERATED: <name> -->`
+is replaced, for the blocks `summary`, `mechanisms` and `compensating`.
+"""
+
+import argparse
+import os
+import re
+import sys
+
+import yaml
+
+STATUSES = ("built", "written", "designed")
+BLOCKS = ("summary", "mechanisms", "compensating")
+
+
+class ParityError(Exception):
+    pass
+
+
+def load(path):
+    with open(path) as fh:
+        data = yaml.safe_load(fh)
+    validate(data)
+    return data
+
+
+def validate(data):
+    if not isinstance(data, dict) or "clouds" not in data or "capabilities" not in data:
+        raise ParityError("parity data needs `clouds` and `capabilities`")
+    clouds = list(data["clouds"])
+    seen = set()
+    for cap in data["capabilities"]:
+        cid = cap.get("id")
+        if not cid or not cap.get("name"):
+            raise ParityError(f"capability without id or name: {cap!r}")
+        if cid in seen:
+            raise ParityError(f"duplicate capability id: {cid}")
+        seen.add(cid)
+        cells = cap.get("clouds") or {}
+        if list(cells) != clouds:
+            raise ParityError(f"{cid}: needs exactly the clouds {clouds}, in that order; has {list(cells)}")
+        for cloud, cell in cells.items():
+            if not cell.get("mechanism"):
+                raise ParityError(f"{cid}/{cloud}: no mechanism")
+            if cell.get("status") not in STATUSES:
+                raise ParityError(f"{cid}/{cloud}: status must be one of {', '.join(STATUSES)}")
+            if cell["status"] != "designed" and not cell.get("evidence"):
+                raise ParityError(f"{cid}/{cloud}: a {cell['status']} cell names its evidence")
+            if cell["status"] == "designed" and cell.get("evidence"):
+                raise ParityError(f"{cid}/{cloud}: a designed cell has no evidence")
+
+
+def _cell(text):
+    return " ".join(str(text).split()).replace("|", "\\|")
+
+
+def render(data):
+    clouds = data["clouds"]
+    head = "| Capability | " + " | ".join(clouds.values()) + " |"
+    rule = "|---|" + "---|" * len(clouds)
+    summary = [head, rule]
+    mechanisms = [head, rule]
+    compensating = ["| Capability | Cloud | Where the mechanism is weaker, and what to do |", "|---|---|---|"]
+    for cap in data["capabilities"]:
+        cells = cap["clouds"]
+        summary.append(
+            f"| {_cell(cap['name'])} | " + " | ".join(cells[c]["status"].capitalize() for c in clouds) + " |"
+        )
+        mechanisms.append(
+            f"| {_cell(cap['name'])} | " + " | ".join(_cell(cells[c]["mechanism"]) for c in clouds) + " |"
+        )
+        for c in clouds:
+            step = cells[c].get("compensating_step")
+            if step:
+                compensating.append(f"| {_cell(cap['name'])} | {clouds[c]} | {_cell(step)} |")
+    return {"summary": "\n".join(summary), "mechanisms": "\n".join(mechanisms), "compensating": "\n".join(compensating)}
+
+
+def apply(page, blocks):
+    for name in BLOCKS:
+        pattern = re.compile(rf"(<!-- BEGIN GENERATED: {name} -->\n)(?:.*?\n)?(<!-- END GENERATED: {name} -->)", re.S)
+        if not pattern.search(page):
+            raise ParityError(f"the page has no generated block named {name}")
+        page = pattern.sub(lambda m, text=blocks[name]: m.group(1) + text + "\n" + m.group(2), page)
+    return page
+
+
+def missing_evidence(data, root):
+    """Evidence paths that do not exist. Paths are those of the published tree;
+    in the source repository the documentation sits one level down, under
+    public-docs/, so a path is also looked for there."""
+    out = []
+    for cap in data["capabilities"]:
+        for cloud, cell in cap["clouds"].items():
+            for path in cell.get("evidence", []):
+                if not any(
+                    os.path.exists(os.path.join(base, path)) for base in (root, os.path.join(root, "public-docs"))
+                ):
+                    out.append(f"{cap['id']}/{cloud}: {path}")
+    return out
+
+
+def main(argv=None):
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base = os.path.join(here, "public-docs") if os.path.isdir(os.path.join(here, "public-docs")) else here
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--data", default=os.path.join(base, "parity.yaml"))
+    ap.add_argument("--page", default=os.path.join(base, "docs", "cloud-parity.md"))
+    ap.add_argument("--check", action="store_true")
+    ap.add_argument("--verify-evidence", action="store_true")
+    ap.add_argument("--root", default=here, help="tree the evidence paths are relative to")
+    args = ap.parse_args(argv)
+    try:
+        data = load(args.data)
+        with open(args.page) as fh:
+            current = fh.read()
+        wanted = apply(current, render(data))
+    except ParityError as exc:
+        print(f"parity-gen: {exc}", file=sys.stderr)
+        return 2
+    if args.verify_evidence:
+        missing = missing_evidence(data, args.root)
+        if missing:
+            print("parity-gen: evidence not found:\n  " + "\n  ".join(missing), file=sys.stderr)
+            return 1
+    if args.check:
+        if wanted != current:
+            print(f"parity-gen: {args.page} differs from {args.data}; run scripts/parity-gen", file=sys.stderr)
+            return 1
+        return 0
+    if wanted != current:
+        with open(args.page, "w") as fh:
+            fh.write(wanted)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

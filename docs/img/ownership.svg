@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 324" width="760" height="324" role="img" aria-label="A resource with the required tags that a registered state claims passes; tagged but unclaimed is a drift finding; claimed but untagged is a tag finding; neither tagged nor claimed is both findings">
+<title>A resource with the required tags that a registered state claims passes; tagged but unclaimed is a drift finding; claimed but untagged is a tag finding; neither tagged nor claimed is both findings</title>
+<style>
+text{font-family:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif}
+.bg{fill:#ffffff}
+.t { fill:#191c22; } .tq { fill:#555c68; } .ta { fill:#0b5a72; } .tg { fill:#2a6a35; }
+.tw { fill:#875200; } .ti { fill:#285d9e; } .tc { fill:#b0261d; } .tm { fill:#5a606a; }
+.ton { fill:#ffffff; }
+.bx { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; } .bxp { fill:#f5f6f8; stroke:#dde1e6; stroke-width:1.25; }
+.bxa { fill:#e2f0f4; stroke:#0b5a72; stroke-width:1.25; } .bxg { fill:#e4f3e6; stroke:#2a6a35; stroke-width:1.25; }
+.bxw { fill:#fcf0d7; stroke:#875200; stroke-width:1.25; } .bxi { fill:#e6eff9; stroke:#285d9e; stroke-width:1.25; }
+.bxc { fill:#fbeae8; stroke:#b0261d; stroke-width:1.25; } .bxm { fill:#efeeeb; stroke:#5a606a; stroke-width:1.25; }
+.bxd { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#878f9c; stroke-width:1.25; fill:none; } .lna { stroke:#0b5a72; stroke-width:2; fill:none; }
+.lng { stroke:#2a6a35; stroke-width:2; fill:none; } .lnw { stroke:#875200; stroke-width:2; fill:none; }
+.lnd { stroke:#878f9c; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#2a6a35; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#dde1e6; stroke-width:1; fill:none; }
+.lnx { stroke:#b0261d; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#0b5a72; } .fg { fill:#2a6a35; } .fl { fill:#878f9c; } .fw { fill:#875200; }
+.fi { fill:#285d9e; } .fc { fill:#b0261d; } .fm { fill:#5a606a; } .fp { fill:#f5f6f8; }
+.fs { fill:#e2f0f4; }
+path,line,polyline{stroke-linejoin:round}
+@media (prefers-color-scheme: dark){
+.bg{fill:#121417}
+.t { fill:#e7e9ec; } .tq { fill:#a5acb7; } .ta { fill:#6cc3da; } .tg { fill:#6fc480; }
+.tw { fill:#e2b04e; } .ti { fill:#86b3ea; } .tc { fill:#f08b80; } .tm { fill:#9ba2ac; }
+.ton { fill:#121417; }
+.bx { fill:#121417; stroke:#7b8592; stroke-width:1.25; } .bxp { fill:#1a1d21; stroke:#30363e; stroke-width:1.25; }
+.bxa { fill:#14303a; stroke:#6cc3da; stroke-width:1.25; } .bxg { fill:#1b2e20; stroke:#6fc480; stroke-width:1.25; }
+.bxw { fill:#32291a; stroke:#e2b04e; stroke-width:1.25; } .bxi { fill:#1a2636; stroke:#86b3ea; stroke-width:1.25; }
+.bxc { fill:#3a1f1f; stroke:#f08b80; stroke-width:1.25; } .bxm { fill:#24262b; stroke:#9ba2ac; stroke-width:1.25; }
+.bxd { fill:#121417; stroke:#7b8592; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#7b8592; stroke-width:1.25; fill:none; } .lna { stroke:#6cc3da; stroke-width:2; fill:none; }
+.lng { stroke:#6fc480; stroke-width:2; fill:none; } .lnw { stroke:#e2b04e; stroke-width:2; fill:none; }
+.lnd { stroke:#7b8592; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#6fc480; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#30363e; stroke-width:1; fill:none; }
+.lnx { stroke:#f08b80; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#6cc3da; } .fg { fill:#6fc480; } .fl { fill:#7b8592; } .fw { fill:#e2b04e; }
+.fi { fill:#86b3ea; } .fc { fill:#f08b80; } .fm { fill:#9ba2ac; } .fp { fill:#1a1d21; }
+.fs { fill:#14303a; }
+}
+</style>
+<rect class="bg" width="760" height="324" rx="10"/>
+<text x="20" y="36" class="t" font-size="18" font-weight="700" data-role="title">Two checks decide what the scanner reports for one resource</text>
+<rect x="20" y="56" width="193.09" height="36" rx="8" class="bxp"/>
+<rect x="219.09" y="56" width="257.45" height="36" rx="8" class="bxp"/>
+<text x="235.09" y="78" class="t" font-size="15" font-weight="700">A registered state claims it</text>
+<rect x="482.55" y="56" width="257.45" height="36" rx="8" class="bxp"/>
+<text x="498.55" y="78" class="t" font-size="15" font-weight="700">No registered state claims it</text>
+<rect x="20" y="98" width="193.09" height="76" rx="8" class="bx"/>
+<text x="36" y="130" class="t" font-size="15" font-weight="700">Required tags</text>
+<text x="36" y="150" class="t" font-size="15" font-weight="700">present and valid</text>
+<rect x="219.09" y="98" width="257.45" height="76" rx="8" class="bxg"/>
+<text x="235.09" y="129" class="tg" font-size="15" font-weight="700">Pass</text>
+<text x="235.09" y="151" class="tq" font-size="13">No finding.</text>
+<rect x="482.55" y="98" width="257.45" height="76" rx="8" class="bxw"/>
+<text x="498.55" y="120" class="tw" font-size="15" font-weight="700">Drift finding</text>
+<text x="498.55" y="142" class="tq" font-size="13">Tagged, but no</text>
+<text x="498.55" y="160" class="tq" font-size="13">repository&#x27;s state holds it.</text>
+<rect x="20" y="180" width="193.09" height="76" rx="8" class="bx"/>
+<text x="36" y="212" class="t" font-size="15" font-weight="700">Required tags</text>
+<text x="36" y="232" class="t" font-size="15" font-weight="700">missing or invalid</text>
+<rect x="219.09" y="180" width="257.45" height="76" rx="8" class="bxw"/>
+<text x="235.09" y="202" class="tw" font-size="15" font-weight="700">Tag finding</text>
+<text x="235.09" y="224" class="tq" font-size="13">Owned, but its tags</text>
+<text x="235.09" y="242" class="tq" font-size="13">do not say by whom.</text>
+<rect x="482.55" y="180" width="257.45" height="76" rx="8" class="bxc"/>
+<text x="498.55" y="202" class="tc" font-size="15" font-weight="700">Tag and drift findings</text>
+<text x="498.55" y="224" class="tq" font-size="13">No tags and no</text>
+<text x="498.55" y="242" class="tq" font-size="13">owner: made by hand.</text>
+<text x="20" y="282.4" class="tq" font-size="13" data-role="note">A state claims a resource when the resource id appears in a Terraform state file,</text>
+<text x="20" y="300.4" class="tq" font-size="13" data-role="note">a CloudFormation stack or a Pulumi checkpoint that a registry entry points to.</text>
+</svg>

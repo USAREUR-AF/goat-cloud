@@ -1,0 +1,585 @@
+#!/usr/bin/env python3
+"""Compliance tag linter — validates IaC configs against the compliance contract.
+
+Checks that required tags are present with valid values in Terraform,
+Serverless Framework, Pulumi, and CDK configurations.
+
+Usage:
+    compliance-lint --iac-type terraform --path .
+    compliance-lint --iac-type serverless --path serverless.yml
+    compliance-lint --iac-type pulumi --path .
+    compliance-lint --contract-s3 s3://bucket/compliance-contract.json
+    compliance-lint --contract-ssm /acme/dev/compliance-contract
+"""
+
+import argparse
+import json
+import os
+import re
+import sys
+
+# Default contract: the fallback when no remote source is configured.
+# BEGIN GENERATED CONTRACT - written by scripts/contract-gen from contract/contract.yaml. Do not edit.
+_DEFAULT_CONTRACT = {
+    "version": "1.0",
+    "platform": "aws",
+    "unit": "resource",
+    "key_prefix": "",
+    "required_facts": ["project", "environment", "managed_by", "lifecycle", "repository"],
+    "keys": {
+        "project": "Project",
+        "environment": "Environment",
+        "managed_by": "ManagedBy",
+        "lifecycle": "Lifecycle",
+        "expires_at": "ExpiresAt",
+        "repository": "Repository",
+        "owner": "Owner",
+        "contact": "Contact",
+        "cost_center": "CostCenter",
+        "protected": "Protected",
+        "schedule": "Schedule",
+    },
+    "carriers": {
+        "project": "tag",
+        "environment": "tag",
+        "managed_by": "tag",
+        "lifecycle": "tag",
+        "expires_at": "tag",
+        "repository": "tag",
+        "owner": "tag",
+        "contact": "tag",
+        "cost_center": "tag",
+        "protected": "tag",
+        "schedule": "tag",
+    },
+    "allowed": {
+        "managed_by": [
+            "terraform",
+            "opentofu",
+            "pulumi",
+            "serverless",
+            "cdk",
+            "cloudformation",
+            "sam",
+            "copilot",
+            "bicep",
+            "arm",
+            "infrastructure-manager",
+            "ansible",
+            "helm",
+            "manual",
+        ],
+        "lifecycle": ["persistent", "temporary", "experiment", "deprecated"],
+        "protected": ["true"],
+    },
+    "patterns": {
+        "expires_at": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?Z$",
+        "repository": "^(https://[^/@:]+(:[0-9]+)?/[^@]+|git@[^/:@]+:[^@]+)$",
+    },
+    "rules": [
+        {
+            "id": "temporary-requires-expires-at",
+            "when": {
+                "fact": "lifecycle",
+                "equals": "temporary",
+            },
+            "require": ["expires_at"],
+        },
+        {
+            "id": "experiment-requires-expires-at",
+            "when": {
+                "fact": "lifecycle",
+                "equals": "experiment",
+            },
+            "require": ["expires_at"],
+        },
+    ],
+    "protected_values": {
+        "environment": ["prod", "production"],
+    },
+    "required_tags": ["Project", "Environment", "ManagedBy", "Lifecycle", "Repository"],
+    "valid_managed_by": [
+        "terraform",
+        "opentofu",
+        "pulumi",
+        "serverless",
+        "cdk",
+        "cloudformation",
+        "sam",
+        "copilot",
+        "bicep",
+        "arm",
+        "infrastructure-manager",
+        "ansible",
+        "helm",
+        "manual",
+    ],
+    "valid_lifecycle": ["persistent", "temporary", "experiment", "deprecated"],
+    "tag_validation": {
+        "ManagedBy": {
+            "enum": [
+                "terraform",
+                "opentofu",
+                "pulumi",
+                "serverless",
+                "cdk",
+                "cloudformation",
+                "sam",
+                "copilot",
+                "bicep",
+                "arm",
+                "infrastructure-manager",
+                "ansible",
+                "helm",
+                "manual",
+            ],
+        },
+        "Lifecycle": {
+            "enum": ["persistent", "temporary", "experiment", "deprecated"],
+        },
+        "ExpiresAt": {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?Z$",
+        },
+        "Repository": {
+            "pattern": "^(https://[^/@:]+(:[0-9]+)?/[^@]+|git@[^/:@]+:[^@]+)$",
+        },
+        "Protected": {
+            "enum": ["true"],
+        },
+    },
+}
+# END GENERATED CONTRACT
+
+
+def load_contract(args):
+    """Load compliance contract from SSM, S3, or use default."""
+    if args.contract_ssm:
+        return _load_from_ssm(args.contract_ssm)
+    if args.contract_s3:
+        return _load_from_s3(args.contract_s3)
+    env_ssm = os.environ.get("COMPLIANCE_CONTRACT_SSM")
+    if env_ssm:
+        return _load_from_ssm(env_ssm)
+    env_s3 = os.environ.get("COMPLIANCE_CONTRACT_S3")
+    if env_s3:
+        return _load_from_s3(env_s3)
+    print("  Using default compliance contract (no remote source configured)", file=sys.stderr)
+    return _DEFAULT_CONTRACT
+
+
+def _load_from_ssm(name):
+    """Load contract from SSM Parameter Store."""
+    try:
+        import boto3
+
+        ssm = boto3.client("ssm")
+        resp = ssm.get_parameter(Name=name)
+        return json.loads(resp["Parameter"]["Value"])
+    except Exception as e:
+        print(f"WARNING: Could not load contract from SSM {name}: {e}", file=sys.stderr)
+        return _DEFAULT_CONTRACT
+
+
+def _load_from_s3(uri):
+    """Load contract from S3 URI (s3://bucket/key)."""
+    try:
+        import boto3
+
+        parts = uri.replace("s3://", "").split("/", 1)
+        bucket, key = parts[0], parts[1]
+        s3 = boto3.client("s3")
+        resp = s3.get_object(Bucket=bucket, Key=key)
+        return json.loads(resp["Body"].read())
+    except Exception as e:
+        print(f"WARNING: Could not load contract from S3 {uri}: {e}", file=sys.stderr)
+        return _DEFAULT_CONTRACT
+
+
+_MODULE_BLOCK = re.compile(r"""module\s+"([^"]+)"\s*\{(.*?)^\}""", re.S | re.M)
+_MODULE_SOURCE = re.compile(r'''^\s*source\s*=\s*"([^"]+)"''', re.M)
+_TAG_MODULE_NAMES = ("compliance-tags", "compliance-labels")
+
+
+def tag_module_names(terraform_text):
+    """Names of the module blocks whose source is the tag (or label) module.
+
+    The source is matched on its last path segment, ignoring a `?ref=` query
+    and a trailing slash, so a local path, a git URL and a registry address
+    are all recognized.
+    """
+    names = set()
+    for name, body in _MODULE_BLOCK.findall(terraform_text):
+        source = _MODULE_SOURCE.search(body)
+        if not source:
+            continue
+        last = source.group(1).split("?")[0].rstrip("/").split("/")[-1]
+        if last in _TAG_MODULE_NAMES:
+            names.add(name)
+    return names
+
+
+def required_keys(contract):
+    """Tag keys the contract requires. Reads a 1.0 contract and an earlier one."""
+    if "required_tags" in contract:
+        return list(contract["required_tags"])
+    keys = contract.get("keys", {})
+    return [keys[fact] for fact in contract.get("required_facts", []) if fact in keys]
+
+
+# Facts whose values compare without regard to case.
+_CASE_INSENSITIVE_FACTS = ("managed_by",)
+
+
+def check_values(tags, contract, where):
+    """Check literal tag values against the contract's allowed values, patterns and rules.
+
+    `tags` maps tag key to value. A value that is not a plain string (an
+    intrinsic function, a reference) is not checked.
+    """
+    findings = []
+    keys = dict(contract.get("keys", {}))
+    values = {fact: tags[key] for fact, key in keys.items() if isinstance(tags.get(key), str)}
+
+    allowed = dict(contract.get("allowed", {}))
+    patterns = dict(contract.get("patterns", {}))
+    if not allowed and not patterns:
+        # A contract published before 1.0 states its checks per tag key.
+        by_key = {key: fact for fact, key in keys.items()} or {"ManagedBy": "managed_by", "Repository": "repository"}
+        for key, check in contract.get("tag_validation", {}).items():
+            fact = by_key.get(key, key)
+            if isinstance(tags.get(key), str):
+                values.setdefault(fact, tags[key])
+            keys.setdefault(fact, key)
+            if "enum" in check:
+                allowed[fact] = check["enum"]
+            if "pattern" in check:
+                patterns[fact] = check["pattern"]
+
+    for fact, value in values.items():
+        key = keys[fact]
+        accepted = allowed.get(fact)
+        if fact in _CASE_INSENSITIVE_FACTS and accepted:
+            # managed_by compares without regard to case: Terraform and terraform are the same tool.
+            ok = value.lower() in {v.lower() for v in accepted}
+        else:
+            ok = not accepted or value in accepted
+        if not ok:
+            findings.append(f"{where}: invalid {key} value '{value}'. Valid: {', '.join(allowed[fact])}")
+        elif fact in patterns and not re.match(patterns[fact], value):
+            findings.append(f"{where}: {key} value '{value}' does not match {patterns[fact]}")
+
+    for rule in contract.get("rules", []):
+        when = rule.get("when", {})
+        if values.get(when.get("fact")) != when.get("equals"):
+            continue
+        for fact in rule.get("require", []):
+            key = keys.get(fact)
+            if key and key not in tags:
+                findings.append(f"{where}: {keys[when['fact']]}={when['equals']} requires {key}")
+
+    return findings
+
+
+def lint_terraform(path, contract):
+    """Check Terraform configs for required tags."""
+    findings = []
+    required = set(required_keys(contract))
+
+    # Look for provider default_tags in .tf files
+    tf_files = []
+    if os.path.isdir(path):
+        for f in os.listdir(path):
+            if f.endswith(".tf"):
+                tf_files.append(os.path.join(path, f))
+    elif os.path.isfile(path) and path.endswith(".tf"):
+        tf_files.append(path)
+
+    found_default_tags = False
+    found_tags = set()
+
+    contents = []
+    for tf_file in tf_files:
+        with open(tf_file) as f:
+            contents.append(f.read())
+
+    # The tag module provides every required tag. It is recognized by its
+    # source, under whatever name the configuration gives it.
+    tag_modules = tag_module_names("\n".join(contents))
+    uses_compliance_module = any(
+        re.search(rf"\bmodule\.{re.escape(name)}\.\w+", content) for name in tag_modules for content in contents
+    )
+
+    for content in contents:
+        # Simple regex to find default_tags blocks
+        if "default_tags" in content or "default_labels" in content:
+            found_default_tags = True
+            # Look for tag key assignments
+            for tag in required:
+                if re.search(rf"{tag}\s*=", content):
+                    found_tags.add(tag)
+
+    # The compliance-tags module output includes all required tags
+    if uses_compliance_module:
+        found_tags = required.copy()
+
+    if not found_default_tags:
+        findings.append("No provider default_tags block found. Required tags won't be applied to resources.")
+
+    missing = required - found_tags
+    if missing and found_default_tags:
+        findings.append(f"Missing tags in default_tags: {', '.join(sorted(missing))}")
+
+    return findings
+
+
+def lint_serverless(path, contract):
+    """Check serverless.yml for required tags."""
+    findings = []
+    required = set(required_keys(contract))
+
+    try:
+        import yaml
+    except ImportError:
+        findings.append("PyYAML not installed — cannot parse serverless.yml. Run: pip install pyyaml")
+        return findings
+
+    sls_path = path if os.path.isfile(path) else os.path.join(path, "serverless.yml")
+    if not os.path.exists(sls_path):
+        findings.append(f"serverless.yml not found at {sls_path}")
+        return findings
+
+    with open(sls_path) as f:
+        config = yaml.safe_load(f)
+
+    provider = config.get("provider", {})
+    stack_tags = provider.get("stackTags", {})
+    tags = provider.get("tags", {})
+
+    # Check stackTags (applied to CloudFormation stack)
+    if not stack_tags:
+        findings.append("No provider.stackTags defined. CloudFormation stack won't have compliance tags.")
+    else:
+        missing = required - set(stack_tags.keys())
+        if missing:
+            findings.append(f"Missing tags in provider.stackTags: {', '.join(sorted(missing))}")
+
+    # Check tags (applied to Lambda functions)
+    if not tags:
+        findings.append("No provider.tags defined. Lambda functions won't have compliance tags.")
+    else:
+        missing = required - set(tags.keys())
+        if missing:
+            findings.append(f"Missing tags in provider.tags: {', '.join(sorted(missing))}")
+
+    # Validate values against the contract
+    if stack_tags:
+        findings.extend(check_values(stack_tags, contract, "provider.stackTags"))
+    if tags:
+        findings.extend(check_values(tags, contract, "provider.tags"))
+
+    return findings
+
+
+def lint_pulumi(path, contract):
+    """Check Pulumi program for required tags."""
+    findings = []
+    required = set(required_keys(contract))
+
+    # Look for common_tags or tags dict in Python Pulumi programs
+    main_py = path if os.path.isfile(path) else os.path.join(path, "__main__.py")
+    if not os.path.exists(main_py):
+        findings.append(f"Pulumi program not found at {main_py}")
+        return findings
+
+    with open(main_py) as f:
+        content = f.read()
+
+    found_tags = set()
+    for tag in required:
+        # Check for tag keys as string literals in the code
+        if re.search(rf'["\']({tag})["\']', content):
+            found_tags.add(tag)
+
+    missing = required - found_tags
+    if missing:
+        findings.append(f"Missing tag references in Pulumi program: {', '.join(sorted(missing))}")
+
+    return findings
+
+
+def lint_cdk(path, contract):
+    """Check CDK app for required tags."""
+    findings = []
+    required = set(required_keys(contract))
+
+    # Look for tag additions in CDK code
+    app_files = []
+    if os.path.isdir(path):
+        for root, _dirs, files in os.walk(path):
+            for f in files:
+                if f.endswith((".py", ".ts", ".js")):
+                    app_files.append(os.path.join(root, f))
+    elif os.path.isfile(path):
+        app_files.append(path)
+
+    found_tags = set()
+    for app_file in app_files:
+        with open(app_file) as f:
+            content = f.read()
+        for tag in required:
+            if re.search(rf'["\']({tag})["\']', content):
+                found_tags.add(tag)
+
+    missing = required - found_tags
+    if missing:
+        findings.append(f"Missing tag references in CDK code: {', '.join(sorted(missing))}")
+
+    return findings
+
+
+def lint_cloudformation(path, contract):
+    """Check CloudFormation/SAM template for required tags."""
+    findings = []
+    required = set(required_keys(contract))
+
+    try:
+        import yaml
+    except ImportError:
+        findings.append("PyYAML not installed — cannot parse CFN template. Run: pip install pyyaml")
+        return findings
+
+    # Find the template file
+    template_path = None
+    if os.path.isfile(path) and path.endswith((".yaml", ".yml", ".json", ".template")):
+        template_path = path
+    else:
+        for name in (
+            "template.yaml",
+            "template.yml",
+            "template.json",
+            "cloudformation.yaml",
+            "cloudformation.yml",
+            "cfn.yaml",
+        ):
+            candidate = os.path.join(path, name)
+            if os.path.exists(candidate):
+                template_path = candidate
+                break
+
+    if not template_path:
+        findings.append(f"CloudFormation template not found at {path}")
+        return findings
+
+    # CloudFormation uses custom YAML tags (!Sub, !Ref, !GetAtt, etc.)
+    # Add constructors to handle them as plain strings/lists
+    loader = yaml.SafeLoader
+    for tag in (
+        "!Sub",
+        "!Ref",
+        "!GetAtt",
+        "!Select",
+        "!Split",
+        "!Join",
+        "!If",
+        "!Not",
+        "!Equals",
+        "!And",
+        "!Or",
+        "!FindInMap",
+        "!ImportValue",
+        "!Condition",
+        "!Base64",
+        "!Cidr",
+        "!Transform",
+        "!GetAZs",
+    ):
+        loader.add_constructor(
+            tag,
+            lambda l, n: (
+                l.construct_scalar(n)
+                if n.id == "scalar"
+                else l.construct_sequence(n)
+                if n.id == "sequence"
+                else l.construct_mapping(n)
+            ),
+        )
+
+    with open(template_path) as f:
+        template = yaml.load(f, Loader=loader)
+
+    resources = template.get("Resources", {})
+    if not resources:
+        findings.append("No Resources section found in template")
+        return findings
+
+    # Check each resource that supports tags
+    tagged_resources = 0
+    for name, resource in resources.items():
+        props = resource.get("Properties", {})
+        tags = props.get("Tags")
+        if tags is None:
+            continue
+
+        tagged_resources += 1
+        # Tags can be a list of {Key, Value} or a map
+        if isinstance(tags, list):
+            tag_keys = {t.get("Key", "") for t in tags if isinstance(t, dict)}
+        elif isinstance(tags, dict):
+            tag_keys = set(tags.keys())
+        else:
+            continue
+
+        missing = required - tag_keys
+        if missing:
+            findings.append(f"Resource {name}: missing tags {', '.join(sorted(missing))}")
+
+        if isinstance(tags, list):
+            literal = {t.get("Key"): t.get("Value") for t in tags if isinstance(t, dict)}
+        else:
+            literal = tags
+        findings.extend(check_values(literal, contract, f"Resource {name}"))
+
+    if tagged_resources == 0:
+        findings.append("No resources with Tags found in template")
+
+    return findings
+
+
+_LINTERS = {
+    "terraform": lint_terraform,
+    "serverless": lint_serverless,
+    "cloudformation": lint_cloudformation,
+    "pulumi": lint_pulumi,
+    "cdk": lint_cdk,
+}
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Compliance tag linter")
+    parser.add_argument("--iac-type", required=True, choices=_LINTERS.keys(), help="IaC tool type")
+    parser.add_argument("--path", default=".", help="Path to check (default: current directory)")
+    parser.add_argument("--contract-ssm", help="SSM parameter name for compliance contract")
+    parser.add_argument("--contract-s3", help="S3 URI for compliance contract (s3://bucket/key)")
+    args = parser.parse_args()
+
+    print(f"Compliance lint: {args.iac_type} @ {args.path}")
+
+    contract = load_contract(args)
+    print(f"  Contract version: {contract.get('version', 'unknown')}")
+    print(f"  Required tags: {', '.join(required_keys(contract))}")
+
+    linter = _LINTERS[args.iac_type]
+    findings = linter(args.path, contract)
+
+    if findings:
+        print(f"\n  {len(findings)} finding(s):", file=sys.stderr)
+        for i, f in enumerate(findings, 1):
+            print(f"  {i}. {f}", file=sys.stderr)
+        sys.exit(1)
+    else:
+        print("\n  All checks passed.")
+        sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

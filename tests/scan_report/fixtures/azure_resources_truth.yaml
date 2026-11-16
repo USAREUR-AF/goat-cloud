@@ -1,0 +1,10 @@
+# Expected results for azure_inventory.json with --grade resources: the five resources.
+schema_version: "1.0"
+platform: azure
+grade: resources
+units:
+  - {id: "*/virtualnetworks/acme-vnet", result: compliant, rules: []}
+  - {id: "*/virtualmachines/acme-vm", result: non-compliant, rules: [invalid-value]}
+  - {id: "*/roleassignments/acme-assignment", result: not-evaluated, rules: []}
+  - {id: "*/widgets/acme-widget", result: not-evaluated, rules: []}
+  - {id: "*/disks/acme-disk", result: non-compliant, rules: [missing-required]}

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 454" width="760" height="454" role="img" aria-label="A scan finds a resource, the notifier warns its owner and waits 24 hours, an administrator approves it, an administrator arms the executor with Terraform, the executor deletes approved resources, and the executor is removed again; at run time the executor skips any resource that fails one of its checks">
+<title>A scan finds a resource, the notifier warns its owner and waits 24 hours, an administrator approves it, an administrator arms the executor with Terraform, the executor deletes approved resources, and the executor is removed again; at run time the executor skips any resource that fails one of its checks</title>
+<style>
+text{font-family:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif}
+.bg{fill:#ffffff}
+.t { fill:#191c22; } .tq { fill:#555c68; } .ta { fill:#0b5a72; } .tg { fill:#2a6a35; }
+.tw { fill:#875200; } .ti { fill:#285d9e; } .tc { fill:#b0261d; } .tm { fill:#5a606a; }
+.ton { fill:#ffffff; }
+.bx { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; } .bxp { fill:#f5f6f8; stroke:#dde1e6; stroke-width:1.25; }
+.bxa { fill:#e2f0f4; stroke:#0b5a72; stroke-width:1.25; } .bxg { fill:#e4f3e6; stroke:#2a6a35; stroke-width:1.25; }
+.bxw { fill:#fcf0d7; stroke:#875200; stroke-width:1.25; } .bxi { fill:#e6eff9; stroke:#285d9e; stroke-width:1.25; }
+.bxc { fill:#fbeae8; stroke:#b0261d; stroke-width:1.25; } .bxm { fill:#efeeeb; stroke:#5a606a; stroke-width:1.25; }
+.bxd { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#878f9c; stroke-width:1.25; fill:none; } .lna { stroke:#0b5a72; stroke-width:2; fill:none; }
+.lng { stroke:#2a6a35; stroke-width:2; fill:none; } .lnw { stroke:#875200; stroke-width:2; fill:none; }
+.lnd { stroke:#878f9c; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#2a6a35; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#dde1e6; stroke-width:1; fill:none; }
+.lnx { stroke:#b0261d; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#0b5a72; } .fg { fill:#2a6a35; } .fl { fill:#878f9c; } .fw { fill:#875200; }
+.fi { fill:#285d9e; } .fc { fill:#b0261d; } .fm { fill:#5a606a; } .fp { fill:#f5f6f8; }
+.fs { fill:#e2f0f4; }
+path,line,polyline{stroke-linejoin:round}
+@media (prefers-color-scheme: dark){
+.bg{fill:#121417}
+.t { fill:#e7e9ec; } .tq { fill:#a5acb7; } .ta { fill:#6cc3da; } .tg { fill:#6fc480; }
+.tw { fill:#e2b04e; } .ti { fill:#86b3ea; } .tc { fill:#f08b80; } .tm { fill:#9ba2ac; }
+.ton { fill:#121417; }
+.bx { fill:#121417; stroke:#7b8592; stroke-width:1.25; } .bxp { fill:#1a1d21; stroke:#30363e; stroke-width:1.25; }
+.bxa { fill:#14303a; stroke:#6cc3da; stroke-width:1.25; } .bxg { fill:#1b2e20; stroke:#6fc480; stroke-width:1.25; }
+.bxw { fill:#32291a; stroke:#e2b04e; stroke-width:1.25; } .bxi { fill:#1a2636; stroke:#86b3ea; stroke-width:1.25; }
+.bxc { fill:#3a1f1f; stroke:#f08b80; stroke-width:1.25; } .bxm { fill:#24262b; stroke:#9ba2ac; stroke-width:1.25; }
+.bxd { fill:#121417; stroke:#7b8592; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#7b8592; stroke-width:1.25; fill:none; } .lna { stroke:#6cc3da; stroke-width:2; fill:none; }
+.lng { stroke:#6fc480; stroke-width:2; fill:none; } .lnw { stroke:#e2b04e; stroke-width:2; fill:none; }
+.lnd { stroke:#7b8592; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#6fc480; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#30363e; stroke-width:1; fill:none; }
+.lnx { stroke:#f08b80; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#6cc3da; } .fg { fill:#6fc480; } .fl { fill:#7b8592; } .fw { fill:#e2b04e; }
+.fi { fill:#86b3ea; } .fc { fill:#f08b80; } .fm { fill:#9ba2ac; } .fp { fill:#1a1d21; }
+.fs { fill:#14303a; }
+}
+</style>
+<rect class="bg" width="760" height="454" rx="10"/>
+<text x="20" y="36" class="t" font-size="18" font-weight="700" data-role="title">A resource is deleted only after a warning,</text>
+<text x="20" y="60" class="t" font-size="18" font-weight="700" data-role="title">an approval and a deliberate arming</text>
+<path d="M101 100L175.5 100" class="ln"/><path d="M183.5 100L174.5 104.5L174.5 95.5z" class="fl"/>
+<path d="M221 100L295.5 100" class="ln"/><path d="M303.5 100L294.5 104.5L294.5 95.5z" class="fl"/>
+<path d="M341 100L415.5 100" class="ln"/><path d="M423.5 100L414.5 104.5L414.5 95.5z" class="fl"/>
+<path d="M461 100L535.5 100" class="ln"/><path d="M543.5 100L534.5 104.5L534.5 95.5z" class="fl"/>
+<path d="M581 100L655.5 100" class="ln"/><path d="M663.5 100L654.5 104.5L654.5 95.5z" class="fl"/>
+<circle cx="80" cy="100" r="15" class="fa"/>
+<text x="80" y="104.6" text-anchor="middle" class="ton" font-size="13">1</text>
+<text x="80" y="141" text-anchor="middle" class="t" font-size="15" font-weight="700">Scan</text>
+<text x="80" y="163" text-anchor="middle" class="tq" font-size="13">HIGH finding</text>
+<circle cx="200" cy="100" r="15" class="fa"/>
+<text x="200" y="104.6" text-anchor="middle" class="ton" font-size="13">2</text>
+<text x="200" y="141" text-anchor="middle" class="t" font-size="15" font-weight="700">Warn</text>
+<text x="200" y="163" text-anchor="middle" class="tq" font-size="13">email the owner,</text>
+<text x="200" y="181" text-anchor="middle" class="tq" font-size="13">wait 24 hours</text>
+<circle cx="320" cy="100" r="15" class="fa"/>
+<text x="320" y="104.6" text-anchor="middle" class="ton" font-size="13">3</text>
+<text x="320" y="141" text-anchor="middle" class="t" font-size="15" font-weight="700">Approve</text>
+<text x="320" y="163" text-anchor="middle" class="tq" font-size="13">an admin, in</text>
+<text x="320" y="181" text-anchor="middle" class="tq" font-size="13">the dashboard</text>
+<circle cx="440" cy="100" r="15" class="fa"/>
+<text x="440" y="104.6" text-anchor="middle" class="ton" font-size="13">4</text>
+<text x="440" y="141" text-anchor="middle" class="t" font-size="15" font-weight="700">Arm</text>
+<text x="440" y="163" text-anchor="middle" class="tq" font-size="13">Terraform creates</text>
+<text x="440" y="181" text-anchor="middle" class="tq" font-size="13">the executor</text>
+<circle cx="560" cy="100" r="15" class="fc"/>
+<text x="560" y="104.6" text-anchor="middle" class="ton" font-size="13">5</text>
+<text x="560" y="141" text-anchor="middle" class="tc" font-size="15" font-weight="700">Delete</text>
+<text x="560" y="163" text-anchor="middle" class="tq" font-size="13">approved</text>
+<text x="560" y="181" text-anchor="middle" class="tq" font-size="13">resources only</text>
+<circle cx="680" cy="100" r="15" class="fa"/>
+<text x="680" y="104.6" text-anchor="middle" class="ton" font-size="13">6</text>
+<text x="680" y="141" text-anchor="middle" class="t" font-size="15" font-weight="700">Disarm</text>
+<text x="680" y="163" text-anchor="middle" class="tq" font-size="13">executor</text>
+<text x="680" y="181" text-anchor="middle" class="tq" font-size="13">removed</text>
+<rect x="20" y="210.12" width="720" height="174" rx="12" class="bxp"/>
+<text x="36" y="234.52" class="tq" font-size="13" font-weight="700">At step 5 the executor skips a resource that is:</text>
+<rect x="36" y="252.12" width="185.27" height="34" rx="6" class="bx"/>
+<text x="50" y="272.52" class="t" font-size="13">aborted in the dashboard</text>
+<rect x="229.27" y="252.12" width="168.91" height="34" rx="6" class="bx"/>
+<text x="243.27" y="272.52" class="t" font-size="13">grace period extended</text>
+<rect x="406.19" y="252.12" width="126.8" height="34" rx="6" class="bx"/>
+<text x="420.19" y="272.52" class="t" font-size="13">compliant again</text>
+<rect x="540.99" y="252.12" width="130.63" height="34" rx="6" class="bx"/>
+<text x="554.99" y="272.52" class="t" font-size="13">a protected type</text>
+<rect x="36" y="294.12" width="194.97" height="34" rx="6" class="bx"/>
+<text x="50" y="314.52" class="t" font-size="13">in a protected environment</text>
+<rect x="238.97" y="294.12" width="136.75" height="34" rx="6" class="bx"/>
+<text x="252.97" y="314.52" class="t" font-size="13">tagged Protected</text>
+<rect x="383.72" y="294.12" width="152.32" height="34" rx="6" class="bx"/>
+<text x="397.72" y="314.52" class="t" font-size="13">on the protected list</text>
+<rect x="544.05" y="294.12" width="110.97" height="34" rx="6" class="bx"/>
+<text x="558.05" y="314.52" class="t" font-size="13">not approved</text>
+<rect x="36" y="336.12" width="203.12" height="34" rx="6" class="bx"/>
+<text x="50" y="356.52" class="t" font-size="13">approved over 24 hours ago</text>
+<text x="20" y="412.52" class="tq" font-size="13" data-role="note">Dry run is the default: the executor logs what it would delete.</text>
+<text x="20" y="430.52" class="tq" font-size="13" data-role="note">On EC2, RDS, ECS, Lambda, ElastiCache and ELB, its role also refuses resources tagged Protected.</text>
+</svg>

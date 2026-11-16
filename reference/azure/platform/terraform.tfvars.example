@@ -1,0 +1,9 @@
+subscription_id    = "00000000-0000-0000-0000-000000000000"
+location           = "westeurope"
+repository_url     = "https://github.com/example-org/platform"
+name_prefix        = "goat-cloud"
+budget_amount      = 25
+budget_start_month = "2030-01"
+
+# Leave out any provider that `az provider show -n <name>` reports as Registered.
+resource_providers_to_register = ["Microsoft.ManagedIdentity", "Microsoft.Storage"]

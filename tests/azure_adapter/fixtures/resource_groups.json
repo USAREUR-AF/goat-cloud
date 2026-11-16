@@ -1,0 +1,32 @@
+{
+  "totalRecords": 2,
+  "count": 2,
+  "resultTruncated": "false",
+  "data": [
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/Example-App-RG",
+      "name": "Example-App-RG",
+      "type": "microsoft.resources/subscriptions/resourcegroups",
+      "location": "westeurope",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "tags": {
+        "Project": "example",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/example-org/example-repo"
+      },
+      "provisioningState": "Succeeded"
+    },
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-untagged-rg",
+      "name": "example-untagged-rg",
+      "type": "microsoft.resources/subscriptions/resourcegroups",
+      "location": "westeurope",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "tags": null,
+      "provisioningState": "Succeeded"
+    }
+  ],
+  "facets": []
+}

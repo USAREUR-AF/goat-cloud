@@ -1,0 +1,80 @@
+# Rule 6: CI signs in with workload identity federation. No key is stored.
+#
+# Only a push to main signs in. ../../platform admits this file and
+# teardown.yml, run from refs/heads/main, and nothing else: a pull request,
+# another branch, or another workflow on main gets no Google Cloud token. A
+# pull request is checked without any cloud identity: format, validate and the
+# mocked tests. STATE_BUCKET is the stack's state bucket, which holds no other
+# root's state.
+name: Deploy
+
+on:
+  pull_request:
+    paths: ['stack/**', '.github/workflows/deploy.yml']
+  push:
+    branches: [main]
+    paths: ['stack/**', '.github/workflows/deploy.yml']
+
+permissions: {}
+
+concurrency:
+  group: terraform-stack
+  cancel-in-progress: false
+
+jobs:
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: stack
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: 1.11.4
+
+      - run: terraform fmt -check -recursive
+      - run: terraform init -input=false -backend=false
+      - run: terraform validate
+      - run: terraform test
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: stack
+    env:
+      STATE_BUCKET: ${{ vars.STATE_BUCKET }}
+      TF_VAR_project_id: ${{ vars.PROJECT_ID }}
+      TF_VAR_state_bucket: ${{ vars.STATE_BUCKET }}
+      TF_INPUT: "false"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2.1.13
+        with:
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: 1.11.4
+
+      - run: terraform init -input=false -backend-config="bucket=${STATE_BUCKET}"
+
+      - run: terraform plan -input=false -out=plan.out
+
+      - run: terraform apply -input=false plan.out

@@ -1,0 +1,34 @@
+# Expected scan result for each resource of the cases/ root.
+#
+#   python -m goatcloud scan --grade resources ...
+#   python -m goatcloud verify --truth truth.yaml --report report.json
+#
+# Cases are resources inside one project, not projects: grading a project
+# needs one project per case. Each id is a pattern matched against the full
+# resource name.
+schema_version: "1.0"
+platform: gcp
+grade: resources
+units:
+  - id: "//pubsub.googleapis.com/projects/*/topics/*-case-1-conforming"
+    result: compliant
+    rules: []
+  - id: "//pubsub.googleapis.com/projects/*/topics/*-case-2-missing-environment"
+    result: non-compliant
+    rules: [missing-required]
+  - id: "//pubsub.googleapis.com/projects/*/topics/*-case-3-expired"
+    result: non-compliant
+    rules: [expired]
+  - id: "//pubsub.googleapis.com/projects/*/topics/*-case-4-expiry-unreadable"
+    result: non-compliant
+    rules: [expiry-unreadable]
+  - id: "//pubsub.googleapis.com/projects/*/topics/*-case-5-invalid-managed-by"
+    result: non-compliant
+    rules: [invalid-value]
+  - id: "//pubsub.googleapis.com/projects/*/topics/*-case-6-protected"
+    result: compliant
+    rules: [protected]
+  # Case 7: iam.googleapis.com/ServiceAccount has no labels field.
+  - id: "//iam.googleapis.com/projects/*/serviceAccounts/*-case-7-unlabelable@*"
+    result: not-evaluated
+    rules: []

@@ -1,0 +1,169 @@
+# Google Cloud asset types and how each is graded.
+#
+#   resource              deployed, and the type has a labels field:
+#                         graded on labels and on ownership
+#   resource-unlabelable  deployed, but the type has no labels field:
+#                         graded on ownership only
+#   record                not a deployed resource (an enabled API, a backup, a
+#                         key, an image digest, a version, per-project
+#                         settings): listed in the inventory, never graded
+#
+# A type that is not listed here is graded as `default_class` and counted in
+# the inventory document under `unclassified_types`.
+#
+# Labelability was read from the type's schema in Google's API discovery
+# document (https://<service>.googleapis.com/$discovery/rest?version=<v>): a
+# `labels` property on the resource means labelable. A line marked
+# `unverified` was classified without that check, or the check leaves a doubt
+# that the comment states.
+
+schema_version: "1.0"
+
+default_class: resource
+
+grades:
+  resource: labels+ownership
+  resource-unlabelable: ownership
+  record: none
+
+types:
+  # Compute Engine (compute v1)
+  compute.googleapis.com/Instance: resource
+  compute.googleapis.com/Disk: resource
+  compute.googleapis.com/Snapshot: resource
+  compute.googleapis.com/Image: resource
+  compute.googleapis.com/Address: resource
+  compute.googleapis.com/ForwardingRule: resource
+  compute.googleapis.com/VpnGateway: resource
+  compute.googleapis.com/VpnTunnel: resource
+  compute.googleapis.com/ExternalVpnGateway: resource
+  compute.googleapis.com/SecurityPolicy: resource
+  compute.googleapis.com/InstanceTemplate: resource-unlabelable  # its labels property describes the instances it creates
+  compute.googleapis.com/Firewall: resource-unlabelable
+  compute.googleapis.com/Network: resource-unlabelable
+  compute.googleapis.com/Subnetwork: resource-unlabelable
+  compute.googleapis.com/Route: resource-unlabelable
+  compute.googleapis.com/Router: resource-unlabelable
+  compute.googleapis.com/ResourcePolicy: resource-unlabelable
+  compute.googleapis.com/InstanceGroup: resource-unlabelable
+  compute.googleapis.com/InstanceGroupManager: resource-unlabelable
+  compute.googleapis.com/BackendService: resource-unlabelable
+  compute.googleapis.com/BackendBucket: resource-unlabelable
+  compute.googleapis.com/UrlMap: resource-unlabelable
+  compute.googleapis.com/TargetHttpProxy: resource-unlabelable
+  compute.googleapis.com/TargetHttpsProxy: resource-unlabelable
+  compute.googleapis.com/HealthCheck: resource-unlabelable
+  compute.googleapis.com/SslCertificate: resource-unlabelable
+  compute.googleapis.com/NetworkEndpointGroup: resource-unlabelable
+  compute.googleapis.com/Autoscaler: resource-unlabelable
+  compute.googleapis.com/InstanceSettings: record
+  compute.googleapis.com/Project: record
+
+  # Cloud Storage (storage v1)
+  storage.googleapis.com/Bucket: resource
+
+  # Cloud SQL (sqladmin v1)
+  sqladmin.googleapis.com/Instance: resource  # unverified: the labels are settings.userLabels; not checked that the inventory returns them as labels
+  sqladmin.googleapis.com/Backup: record
+  sqladmin.googleapis.com/BackupRun: record
+
+  # Pub/Sub (pubsub v1)
+  pubsub.googleapis.com/Topic: resource
+  pubsub.googleapis.com/Subscription: resource
+  pubsub.googleapis.com/Snapshot: resource
+  pubsub.googleapis.com/Schema: resource-unlabelable
+
+  # IAM (iam v1)
+  iam.googleapis.com/ServiceAccount: resource-unlabelable
+  iam.googleapis.com/Role: resource-unlabelable
+  iam.googleapis.com/ServiceAccountKey: record
+
+  # API keys (apikeys v2)
+  apikeys.googleapis.com/Key: resource-unlabelable
+
+  # Artifact Registry (artifactregistry v1)
+  artifactregistry.googleapis.com/Repository: resource
+  artifactregistry.googleapis.com/DockerImage: record
+
+  # Cloud Logging (logging v2)
+  logging.googleapis.com/LogBucket: resource-unlabelable
+  logging.googleapis.com/LogSink: resource-unlabelable
+  logging.googleapis.com/LogMetric: resource-unlabelable
+
+  # Monitoring (monitoring v3)
+  monitoring.googleapis.com/AlertPolicy: resource  # unverified: the labels are userLabels; not checked that the inventory returns them as labels
+
+  # Dataplex (dataplex v1)
+  dataplex.googleapis.com/EntryGroup: resource
+
+  # App Engine (appengine v1)
+  appengine.googleapis.com/Application: resource-unlabelable
+  appengine.googleapis.com/Service: resource
+  appengine.googleapis.com/Version: record
+
+  # Firestore (firestore v1)
+  firestore.googleapis.com/Database: resource-unlabelable
+
+  # Vertex AI (aiplatform v1)
+  aiplatform.googleapis.com/Dataset: resource
+  aiplatform.googleapis.com/Model: resource
+  aiplatform.googleapis.com/Endpoint: resource
+  aiplatform.googleapis.com/MetadataStore: resource-unlabelable
+
+  # VM Manager (osconfig v1)
+  osconfig.googleapis.com/OSPolicyAssignment: resource-unlabelable
+
+  # Cloud Run (run v2)
+  run.googleapis.com/Service: resource
+  run.googleapis.com/Job: resource
+  run.googleapis.com/Revision: record
+
+  # Cloud Run functions (cloudfunctions v2)
+  cloudfunctions.googleapis.com/Function: resource
+
+  # Secret Manager (secretmanager v1)
+  secretmanager.googleapis.com/Secret: resource
+  secretmanager.googleapis.com/SecretVersion: record
+
+  # BigQuery (bigquery v2)
+  bigquery.googleapis.com/Dataset: resource
+  bigquery.googleapis.com/Table: resource
+
+  # Kubernetes Engine (container v1)
+  container.googleapis.com/Cluster: resource  # unverified: the labels are resourceLabels; not checked that the inventory returns them as labels
+  container.googleapis.com/NodePool: resource-unlabelable  # unverified: labels are set in the node config, not on the pool
+
+  # Cloud KMS (cloudkms v1)
+  cloudkms.googleapis.com/KeyRing: resource-unlabelable
+  cloudkms.googleapis.com/CryptoKey: resource
+  cloudkms.googleapis.com/CryptoKeyVersion: record
+
+  # Databases and caches
+  spanner.googleapis.com/Instance: resource
+  spanner.googleapis.com/Database: resource-unlabelable
+  bigtableadmin.googleapis.com/Instance: resource
+  redis.googleapis.com/Instance: resource
+  memcache.googleapis.com/Instance: resource
+  alloydb.googleapis.com/Cluster: resource
+  alloydb.googleapis.com/Instance: resource
+  file.googleapis.com/Instance: resource  # unverified: the schema has labels; the asset type name was not checked against the asset type list
+
+  # Other services
+  dns.googleapis.com/ManagedZone: resource
+  dataproc.googleapis.com/Cluster: resource
+  workflows.googleapis.com/Workflow: resource
+  cloudscheduler.googleapis.com/Job: resource-unlabelable
+  cloudtasks.googleapis.com/Queue: resource-unlabelable
+  vpcaccess.googleapis.com/Connector: resource-unlabelable
+  cloudbuild.googleapis.com/BuildTrigger: resource-unlabelable
+
+  # Resource Manager (cloudresourcemanager v3)
+  cloudresourcemanager.googleapis.com/Project: resource
+  cloudresourcemanager.googleapis.com/Folder: record
+  cloudresourcemanager.googleapis.com/Organization: record
+
+  # Per-project facts
+  serviceusage.googleapis.com/Service: record
+  cloudbilling.googleapis.com/ProjectBillingInfo: record
+  firebase.googleapis.com/FirebaseProject: record
+  firebase.googleapis.com/FirebaseAppInfo: record  # unverified: no schema checked

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" width="760" height="460" role="img" aria-label="In a consumer repository the tag module puts the contract tags on every resource, the registry module writes one registry entry that names the state location, a CI job checks tags against the published contract, and a teardown workflow is what expiry teardown dispatches">
+<title>In a consumer repository the tag module puts the contract tags on every resource, the registry module writes one registry entry that names the state location, a CI job checks tags against the published contract, and a teardown workflow is what expiry teardown dispatches</title>
+<style>
+text{font-family:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif}
+.bg{fill:#ffffff}
+.t { fill:#191c22; } .tq { fill:#555c68; } .ta { fill:#0b5a72; } .tg { fill:#2a6a35; }
+.tw { fill:#875200; } .ti { fill:#285d9e; } .tc { fill:#b0261d; } .tm { fill:#5a606a; }
+.ton { fill:#ffffff; }
+.bx { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; } .bxp { fill:#f5f6f8; stroke:#dde1e6; stroke-width:1.25; }
+.bxa { fill:#e2f0f4; stroke:#0b5a72; stroke-width:1.25; } .bxg { fill:#e4f3e6; stroke:#2a6a35; stroke-width:1.25; }
+.bxw { fill:#fcf0d7; stroke:#875200; stroke-width:1.25; } .bxi { fill:#e6eff9; stroke:#285d9e; stroke-width:1.25; }
+.bxc { fill:#fbeae8; stroke:#b0261d; stroke-width:1.25; } .bxm { fill:#efeeeb; stroke:#5a606a; stroke-width:1.25; }
+.bxd { fill:#ffffff; stroke:#878f9c; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#878f9c; stroke-width:1.25; fill:none; } .lna { stroke:#0b5a72; stroke-width:2; fill:none; }
+.lng { stroke:#2a6a35; stroke-width:2; fill:none; } .lnw { stroke:#875200; stroke-width:2; fill:none; }
+.lnd { stroke:#878f9c; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#2a6a35; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#dde1e6; stroke-width:1; fill:none; }
+.lnx { stroke:#b0261d; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#0b5a72; } .fg { fill:#2a6a35; } .fl { fill:#878f9c; } .fw { fill:#875200; }
+.fi { fill:#285d9e; } .fc { fill:#b0261d; } .fm { fill:#5a606a; } .fp { fill:#f5f6f8; }
+.fs { fill:#e2f0f4; }
+path,line,polyline{stroke-linejoin:round}
+@media (prefers-color-scheme: dark){
+.bg{fill:#121417}
+.t { fill:#e7e9ec; } .tq { fill:#a5acb7; } .ta { fill:#6cc3da; } .tg { fill:#6fc480; }
+.tw { fill:#e2b04e; } .ti { fill:#86b3ea; } .tc { fill:#f08b80; } .tm { fill:#9ba2ac; }
+.ton { fill:#121417; }
+.bx { fill:#121417; stroke:#7b8592; stroke-width:1.25; } .bxp { fill:#1a1d21; stroke:#30363e; stroke-width:1.25; }
+.bxa { fill:#14303a; stroke:#6cc3da; stroke-width:1.25; } .bxg { fill:#1b2e20; stroke:#6fc480; stroke-width:1.25; }
+.bxw { fill:#32291a; stroke:#e2b04e; stroke-width:1.25; } .bxi { fill:#1a2636; stroke:#86b3ea; stroke-width:1.25; }
+.bxc { fill:#3a1f1f; stroke:#f08b80; stroke-width:1.25; } .bxm { fill:#24262b; stroke:#9ba2ac; stroke-width:1.25; }
+.bxd { fill:#121417; stroke:#7b8592; stroke-width:1.25; stroke-dasharray:5 4; }
+.ln { stroke:#7b8592; stroke-width:1.25; fill:none; } .lna { stroke:#6cc3da; stroke-width:2; fill:none; }
+.lng { stroke:#6fc480; stroke-width:2; fill:none; } .lnw { stroke:#e2b04e; stroke-width:2; fill:none; }
+.lnd { stroke:#7b8592; stroke-width:1.25; fill:none; stroke-dasharray:6 5; }
+.lno { stroke:#6fc480; stroke-width:2; fill:none; stroke-dasharray:2 5; stroke-linecap:round; }
+.lnr { stroke:#30363e; stroke-width:1; fill:none; }
+.lnx { stroke:#f08b80; stroke-width:2; fill:none; stroke-dasharray:3 6; }
+.fa { fill:#6cc3da; } .fg { fill:#6fc480; } .fl { fill:#7b8592; } .fw { fill:#e2b04e; }
+.fi { fill:#86b3ea; } .fc { fill:#f08b80; } .fm { fill:#9ba2ac; } .fp { fill:#1a1d21; }
+.fs { fill:#14303a; }
+}
+</style>
+<rect class="bg" width="760" height="460" rx="10"/>
+<rect x="462" y="56" width="278" height="384" rx="12" class="bxp"/>
+<rect x="20" y="56" width="278" height="384" rx="12" class="bxp"/>
+<text x="20" y="36" class="t" font-size="18" font-weight="700" data-role="title">A repository joins by adding two modules, one CI job and one workflow</text>
+<rect x="34" y="92" width="250" height="76" rx="8" class="bx"/>
+<text x="50" y="114" class="t" font-size="15" font-weight="700">Tag module</text>
+<text x="50" y="136" class="tq" font-size="13">default tags on the provider</text>
+<rect x="476" y="92" width="250" height="76" rx="8" class="bx"/>
+<text x="492" y="114" class="t" font-size="15" font-weight="700">Resources</text>
+<text x="492" y="136" class="tq" font-size="13">carry the contract tags</text>
+<rect x="34" y="178" width="250" height="76" rx="8" class="bx"/>
+<text x="50" y="200" class="t" font-size="15" font-weight="700">Registry module</text>
+<text x="50" y="222" class="tq" font-size="13">repository, tool, state location</text>
+<rect x="476" y="178" width="250" height="76" rx="8" class="bx"/>
+<text x="492" y="200" class="t" font-size="15" font-weight="700">Registry entry</text>
+<text x="492" y="222" class="tq" font-size="13">tells the scanner</text>
+<text x="492" y="240" class="tq" font-size="13">which state to read</text>
+<rect x="34" y="264" width="250" height="76" rx="8" class="bx"/>
+<text x="50" y="286" class="t" font-size="15" font-weight="700">CI lint job</text>
+<text x="50" y="308" class="tq" font-size="13">refuses a change with missing tags</text>
+<rect x="476" y="264" width="250" height="76" rx="8" class="bx"/>
+<text x="492" y="286" class="t" font-size="15" font-weight="700">Published contract</text>
+<text x="492" y="308" class="tq" font-size="13">required keys and accepted values</text>
+<rect x="34" y="350" width="250" height="76" rx="8" class="bx"/>
+<text x="50" y="372" class="t" font-size="15" font-weight="700">teardown.yml</text>
+<text x="50" y="394" class="tq" font-size="13">destroys the stack</text>
+<text x="50" y="412" class="tq" font-size="13">when dispatched</text>
+<rect x="476" y="350" width="250" height="76" rx="8" class="bx"/>
+<text x="492" y="372" class="t" font-size="15" font-weight="700">Expiry teardown</text>
+<text x="492" y="394" class="tq" font-size="13">fires at the stack&#x27;s expiry time</text>
+<text x="36" y="80.4" class="tq" font-size="13" font-weight="700">example-repo</text>
+<text x="478" y="80.4" class="tq" font-size="13" font-weight="700">Cloud account</text>
+<path d="M284 130L466.25 130" class="lna"/><path d="M475.25 130L465.25 135L465.25 125z" class="fa"/>
+<text x="379.62" y="117" text-anchor="middle" class="tq" font-size="13" font-weight="700">tags</text>
+<path d="M284 216L466.25 216" class="lna"/><path d="M475.25 216L465.25 221L465.25 211z" class="fa"/>
+<text x="379.62" y="203" text-anchor="middle" class="tq" font-size="13" font-weight="700">writes</text>
+<path d="M476 302L292.75 302" class="ln"/><path d="M284.75 302L293.75 297.5L293.75 306.5z" class="fl"/>
+<text x="380.38" y="289" text-anchor="middle" class="tq" font-size="13" font-weight="700">read by</text>
+<path d="M476 388L292.75 388" class="ln"/><path d="M284.75 388L293.75 383.5L293.75 392.5z" class="fl"/>
+<text x="380.38" y="375" text-anchor="middle" class="tq" font-size="13" font-weight="700">dispatches</text>
+</svg>

@@ -1,0 +1,19 @@
+subscription_id = "00000000-0000-0000-0000-000000000000"
+location        = "westeurope"
+repo_slug       = "example-repo"
+repository_url  = "https://github.com/example-org/example-repo"
+
+# The CI identity trusts workflow jobs of this repository only. Use a
+# repository you control: whoever owns it can deploy to the subscription.
+github_org  = "example-org"
+github_repo = "example-repo"
+
+# The stack's resource groups. The CI identity gets Contributor on these only.
+stack_resource_groups = ["example-dev-reference"]
+
+# Object id of a person who applies ../stack from a workstation; "" when only CI applies.
+operator_object_id = "00000000-0000-0000-0000-000000000000"
+lock_enabled       = true
+
+# Opt-in: Contributor on the whole subscription. Off by default; see rule 9.
+ci_subscription_contributor = false

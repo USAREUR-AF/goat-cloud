@@ -1,0 +1,55 @@
+# The files scripts/contract-gen writes from contract.yaml, and checks with
+# --check. Add a module by adding an entry; paths are relative to the
+# repository root.
+#
+# kind:
+#   hcl-locals             Terraform locals file holding the contract of one platform
+#   hcl-iac-type-variable  Terraform `iac_type` variable with its accepted values;
+#                          optional `description` and `default`
+#   python-constants       Python module of contract constants
+#   published-json         the JSON contract published to one platform
+#   python-block           the block between the GENERATED CONTRACT markers of a script
+
+targets:
+  - path: modules/aws/compliance-tags/contract.generated.tf
+    kind: hcl-locals
+    platform: aws
+  - path: modules/aws/iac-registry/iac_type.generated.tf
+    kind: hcl-iac-type-variable
+    platform: aws
+  - path: modules/aws/shared/compliance_contract.py
+    kind: python-constants
+    platform: aws
+  - path: contract/dist/compliance-contract.aws.json
+    kind: published-json
+    platform: aws
+  - path: modules/aws/hunterkiller/contract.generated.tf
+    kind: hcl-locals
+    platform: aws
+  - path: scripts/compliance-lint
+    kind: python-block
+    platform: aws
+
+  - path: modules/azure/compliance-tags/contract.generated.tf
+    kind: hcl-locals
+    platform: azure
+  - path: modules/azure/iac-registry/iac_type.generated.tf
+    kind: hcl-iac-type-variable
+    platform: azure
+    description: IaC tool that owns the state
+    default: terraform
+  - path: contract/dist/compliance-contract.azure.json
+    kind: published-json
+    platform: azure
+
+  - path: modules/gcp/compliance-labels/contract.generated.tf
+    kind: hcl-locals
+    platform: gcp
+  - path: modules/gcp/iac-registry/iac_type.generated.tf
+    kind: hcl-iac-type-variable
+    platform: gcp
+    description: IaC tool that owns the state
+    default: terraform
+  - path: contract/dist/compliance-contract.gcp.json
+    kind: published-json
+    platform: gcp

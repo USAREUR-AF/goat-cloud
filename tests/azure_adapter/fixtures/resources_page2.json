@@ -1,0 +1,42 @@
+{
+  "totalRecords": 5,
+  "count": 2,
+  "resultTruncated": "false",
+  "data": [
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-untagged-rg/providers/Microsoft.Network/dnsZones/zone.example",
+      "name": "zone.example",
+      "type": "microsoft.network/dnszones",
+      "kind": "",
+      "location": "global",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "resourceGroup": "example-untagged-rg",
+      "tags": {
+        "Project": "example"
+      },
+      "powerState": "",
+      "diskState": "",
+      "provisioningState": "Succeeded",
+      "timeCreated": "",
+      "creationTime": ""
+    },
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-untagged-rg/providers/Microsoft.Storage/storageAccounts/examplestate",
+      "name": "examplestate",
+      "type": "microsoft.storage/storageaccounts",
+      "kind": "StorageV2",
+      "location": "westeurope",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "resourceGroup": "example-untagged-rg",
+      "tags": {
+        "role": "iac-registry"
+      },
+      "powerState": "",
+      "diskState": "",
+      "provisioningState": "Succeeded",
+      "timeCreated": "",
+      "creationTime": "2030-01-02T03:04:07.0000000Z"
+    }
+  ],
+  "facets": []
+}

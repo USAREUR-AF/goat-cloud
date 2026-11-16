@@ -1,0 +1,7 @@
+[run]
+omit =
+    */yaml/*
+    */hcl2/*
+    */lark/*
+    */regex/*
+    */terraformgraph/*

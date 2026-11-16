@@ -1,0 +1,6 @@
+location   = "us-central1"
+project_id  = "example-project"
+slug        = "example-service"
+owner       = "payments-team"
+workload    = "order-events"
+environment = "dev"

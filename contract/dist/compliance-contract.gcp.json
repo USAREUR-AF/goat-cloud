@@ -1,0 +1,96 @@
+{
+  "version": "1.0",
+  "platform": "gcp",
+  "unit": "project",
+  "key_prefix": "",
+  "required_facts": [
+    "project",
+    "environment",
+    "managed_by",
+    "lifecycle",
+    "owner"
+  ],
+  "keys": {
+    "project": "workload",
+    "environment": "environment",
+    "managed_by": "managed-by",
+    "lifecycle": "lifecycle",
+    "expires_at": "expires-at",
+    "owner": "owner",
+    "cost_center": "cost-center",
+    "protected": "protected",
+    "schedule": "schedule"
+  },
+  "carriers": {
+    "project": "label",
+    "environment": "label",
+    "managed_by": "label",
+    "lifecycle": "label",
+    "expires_at": "label",
+    "repository": "registry-entry",
+    "owner": "label",
+    "contact": "registry-entry",
+    "cost_center": "label",
+    "protected": "label",
+    "schedule": "label"
+  },
+  "allowed": {
+    "managed_by": [
+      "terraform",
+      "opentofu",
+      "pulumi",
+      "serverless",
+      "cdk",
+      "cloudformation",
+      "sam",
+      "copilot",
+      "bicep",
+      "arm",
+      "infrastructure-manager",
+      "ansible",
+      "helm",
+      "manual"
+    ],
+    "lifecycle": [
+      "persistent",
+      "temporary",
+      "experiment",
+      "deprecated"
+    ],
+    "protected": [
+      "true"
+    ]
+  },
+  "patterns": {
+    "expires_at": "^\\d{8}t\\d{4}z$",
+    "repository": "^(https://[^/@:]+(:[0-9]+)?/[^@]+|git@[^/:@]+:[^@]+)$"
+  },
+  "rules": [
+    {
+      "id": "temporary-requires-expires-at",
+      "when": {
+        "fact": "lifecycle",
+        "equals": "temporary"
+      },
+      "require": [
+        "expires_at"
+      ]
+    },
+    {
+      "id": "experiment-requires-expires-at",
+      "when": {
+        "fact": "lifecycle",
+        "equals": "experiment"
+      },
+      "require": [
+        "expires_at"
+      ]
+    }
+  ],
+  "protected_values": {
+    "environment": [
+      "prod",
+      "production"
+    ]
+  }
+}

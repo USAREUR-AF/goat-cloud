@@ -1,0 +1,72 @@
+name: Terraform Validate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: terraform-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.7.0
+      - run: terraform fmt -check -recursive modules reference
+
+  roots:
+    name: List modules and reference roots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      dirs: ${{ steps.list.outputs.dirs }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: list
+        run: |
+          dirs=$(find modules reference -name '*.tf' -not -path '*/.terraform/*' -exec dirname {} \; | sort -u | jq -R . | jq -sc .)
+          echo "dirs=$dirs" >> "$GITHUB_OUTPUT"
+
+  validate:
+    name: Validate (${{ matrix.dir }})
+    needs: roots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        dir: ${{ fromJson(needs.roots.outputs.dirs) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.7.0
+      # No backend and no credential: validate checks the configuration only.
+      - name: Validate
+        working-directory: ${{ matrix.dir }}
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+      # Tests use mocked providers and reach no cloud.
+      - name: Test
+        if: hashFiles(format('{0}/tests/*.tftest.hcl', matrix.dir)) != ''
+        working-directory: ${{ matrix.dir }}
+        run: terraform test -no-color

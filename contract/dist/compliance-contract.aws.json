@@ -1,0 +1,166 @@
+{
+  "version": "1.0",
+  "platform": "aws",
+  "unit": "resource",
+  "key_prefix": "",
+  "required_facts": [
+    "project",
+    "environment",
+    "managed_by",
+    "lifecycle",
+    "repository"
+  ],
+  "keys": {
+    "project": "Project",
+    "environment": "Environment",
+    "managed_by": "ManagedBy",
+    "lifecycle": "Lifecycle",
+    "expires_at": "ExpiresAt",
+    "repository": "Repository",
+    "owner": "Owner",
+    "contact": "Contact",
+    "cost_center": "CostCenter",
+    "protected": "Protected",
+    "schedule": "Schedule"
+  },
+  "carriers": {
+    "project": "tag",
+    "environment": "tag",
+    "managed_by": "tag",
+    "lifecycle": "tag",
+    "expires_at": "tag",
+    "repository": "tag",
+    "owner": "tag",
+    "contact": "tag",
+    "cost_center": "tag",
+    "protected": "tag",
+    "schedule": "tag"
+  },
+  "allowed": {
+    "managed_by": [
+      "terraform",
+      "opentofu",
+      "pulumi",
+      "serverless",
+      "cdk",
+      "cloudformation",
+      "sam",
+      "copilot",
+      "bicep",
+      "arm",
+      "infrastructure-manager",
+      "ansible",
+      "helm",
+      "manual"
+    ],
+    "lifecycle": [
+      "persistent",
+      "temporary",
+      "experiment",
+      "deprecated"
+    ],
+    "protected": [
+      "true"
+    ]
+  },
+  "patterns": {
+    "expires_at": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?Z$",
+    "repository": "^(https://[^/@:]+(:[0-9]+)?/[^@]+|git@[^/:@]+:[^@]+)$"
+  },
+  "rules": [
+    {
+      "id": "temporary-requires-expires-at",
+      "when": {
+        "fact": "lifecycle",
+        "equals": "temporary"
+      },
+      "require": [
+        "expires_at"
+      ]
+    },
+    {
+      "id": "experiment-requires-expires-at",
+      "when": {
+        "fact": "lifecycle",
+        "equals": "experiment"
+      },
+      "require": [
+        "expires_at"
+      ]
+    }
+  ],
+  "protected_values": {
+    "environment": [
+      "prod",
+      "production"
+    ]
+  },
+  "required_tags": [
+    "Project",
+    "Environment",
+    "ManagedBy",
+    "Lifecycle",
+    "Repository"
+  ],
+  "valid_managed_by": [
+    "terraform",
+    "opentofu",
+    "pulumi",
+    "serverless",
+    "cdk",
+    "cloudformation",
+    "sam",
+    "copilot",
+    "bicep",
+    "arm",
+    "infrastructure-manager",
+    "ansible",
+    "helm",
+    "manual"
+  ],
+  "valid_lifecycle": [
+    "persistent",
+    "temporary",
+    "experiment",
+    "deprecated"
+  ],
+  "tag_validation": {
+    "ManagedBy": {
+      "enum": [
+        "terraform",
+        "opentofu",
+        "pulumi",
+        "serverless",
+        "cdk",
+        "cloudformation",
+        "sam",
+        "copilot",
+        "bicep",
+        "arm",
+        "infrastructure-manager",
+        "ansible",
+        "helm",
+        "manual"
+      ]
+    },
+    "Lifecycle": {
+      "enum": [
+        "persistent",
+        "temporary",
+        "experiment",
+        "deprecated"
+      ]
+    },
+    "ExpiresAt": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?Z$"
+    },
+    "Repository": {
+      "pattern": "^(https://[^/@:]+(:[0-9]+)?/[^@]+|git@[^/:@]+:[^@]+)$"
+    },
+    "Protected": {
+      "enum": [
+        "true"
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+# Rule 9: teardown is terraform destroy of the stack, run by the repository
+# itself. It destroys the stack root only: no input chooses a directory.
+#
+# The job runs in the GitHub environment "teardown". That environment must
+# allow the branch main only and require a reviewer (README, "What CI may
+# do"). Sign-in succeeds only for this file run from refs/heads/main, which
+# ../../platform admits by its workflow_ref.
+name: Teardown
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: terraform-stack
+  cancel-in-progress: false
+
+jobs:
+  destroy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: teardown
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: stack
+    env:
+      STATE_BUCKET: ${{ vars.STATE_BUCKET }}
+      TF_VAR_project_id: ${{ vars.PROJECT_ID }}
+      TF_VAR_state_bucket: ${{ vars.STATE_BUCKET }}
+      TF_INPUT: "false"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2.1.13
+        with:
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: 1.11.4
+
+      - run: terraform init -input=false -backend-config="bucket=${STATE_BUCKET}"
+
+      - run: terraform destroy -input=false -auto-approve

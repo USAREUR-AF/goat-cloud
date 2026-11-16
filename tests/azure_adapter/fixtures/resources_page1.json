@@ -1,0 +1,57 @@
+{
+  "totalRecords": 5,
+  "count": 3,
+  "resultTruncated": "false",
+  "$skipToken": "c3ludGhldGljLXBhZ2UtMg==",
+  "data": [
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/Example-App-RG/providers/Microsoft.Compute/disks/example-vm_OsDisk",
+      "name": "example-vm_OsDisk",
+      "type": "microsoft.compute/disks",
+      "kind": "",
+      "location": "westeurope",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "resourceGroup": "example-app-rg",
+      "tags": null,
+      "powerState": "",
+      "diskState": "Unattached",
+      "provisioningState": "Succeeded",
+      "timeCreated": "2030-01-02T03:04:05.0000000Z",
+      "creationTime": ""
+    },
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/Example-App-RG/providers/Microsoft.Compute/virtualMachines/Example-VM",
+      "name": "Example-VM",
+      "type": "microsoft.compute/virtualmachines",
+      "kind": "",
+      "location": "westeurope",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "resourceGroup": "example-app-rg",
+      "tags": {
+        "project": "example",
+        "Owner": "platform-team"
+      },
+      "powerState": "PowerState/deallocated",
+      "diskState": "",
+      "provisioningState": "Succeeded",
+      "timeCreated": "2030-01-02T03:04:06.0000000Z",
+      "creationTime": ""
+    },
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/Example-App-RG/providers/Microsoft.Network/virtualNetworks/example-vnet",
+      "name": "example-vnet",
+      "type": "microsoft.network/virtualnetworks",
+      "kind": "",
+      "location": "westeurope",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "resourceGroup": "example-app-rg",
+      "tags": {},
+      "powerState": "",
+      "diskState": "",
+      "provisioningState": "Succeeded",
+      "timeCreated": "",
+      "creationTime": ""
+    }
+  ],
+  "facets": []
+}

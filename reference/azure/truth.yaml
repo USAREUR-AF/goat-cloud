@@ -1,0 +1,42 @@
+# Expected scan result for each resource group of the cases/ root.
+#
+#   python -m goatcloud scan --platform azure --subscription <id> --lag-minutes 0 --out report.json
+#   python -m goatcloud verify --truth truth.yaml --report report.json
+#
+# On Azure the unit a scan grades is the resource group. Each id is a pattern
+# matched against the resource group's resource id, lowercased.
+schema_version: "1.0"
+platform: azure
+grade: units
+units:
+  - id: "*/resourcegroups/*-case-1-conforming"
+    result: compliant
+    rules: []
+  - id: "*/resourcegroups/*-case-2-missing-environment"
+    result: non-compliant
+    rules: [missing-required]
+  - id: "*/resourcegroups/*-case-3-expired"
+    result: non-compliant
+    rules: [expired]
+  - id: "*/resourcegroups/*-case-4-expiry-unreadable"
+    result: non-compliant
+    rules: [expiry-unreadable]
+  - id: "*/resourcegroups/*-case-5-invalid-managed-by"
+    result: non-compliant
+    rules: [invalid-value]
+  - id: "*/resourcegroups/*-case-6-protected"
+    result: compliant
+    rules: [protected]
+  # Case 7: the group holds a Microsoft.Consumption/budgets resource, a type
+  # with no tags property. The unit is graded on its own tags.
+  - id: "*/resourcegroups/*-case-7-untaggable-member"
+    result: compliant
+    rules: []
+  - id: "*/resourcegroups/*-case-8-temporary-no-expiry"
+    result: non-compliant
+    rules: [temporary-requires-expires-at]
+  # Case 9: the build standard requires an expiry for experiment as it does
+  # for temporary.
+  - id: "*/resourcegroups/*-case-9-experiment-no-expiry"
+    result: non-compliant
+    rules: [experiment-requires-expires-at]

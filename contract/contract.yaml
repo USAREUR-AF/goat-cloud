@@ -1,0 +1,213 @@
+# The resource contract: the facts every resource states about itself, on
+# every platform (AWS, Azure, Google Cloud and others).
+#
+# This file is the single source. scripts/contract-gen writes every other copy
+# (Terraform, Python, published JSON, lint fallback) from it, and
+# `scripts/contract-gen --check` fails when a copy differs. See README.md,
+# which also states what a later version of this file may change.
+
+schema_version: "1.0"
+
+# A fact is the same on every platform. A `required` fact must be resolvable
+# for every resource: it is present on the unit the contract attaches to (see
+# `unit` under renderings), and resources inside the unit inherit it.
+# `allowed` lists the only accepted values. `pattern` is a regular expression
+# the value must match from its start.
+facts:
+  project:
+    description: The project or system the resource belongs to.
+    required: true
+  environment:
+    description: The environment the resource runs in.
+    required: true
+    # Optional `allowed` list: when present, the only accepted environment
+    # names. A deployment mapping may set it.
+    # Environments whose resources are never removed by enforcement. A
+    # deployment mapping may replace the list.
+    protected_values:
+      - prod
+      - production
+  managed_by:
+    description: >-
+      The tool that creates and changes the resource. One list for every
+      platform. Values compare without regard to case.
+    required: true
+    allowed:
+      - terraform
+      - opentofu
+      - pulumi
+      - serverless
+      - cdk
+      - cloudformation
+      - sam
+      - copilot
+      - bicep
+      - arm
+      - infrastructure-manager
+      - ansible
+      - helm
+      - manual
+    # Allowed values that are not an infrastructure-as-code tool. A registry
+    # entry accepts every allowed value except these.
+    not_iac_tools:
+      - manual
+  lifecycle:
+    description: How long the resource is meant to exist.
+    required: true
+    allowed:
+      - persistent
+      - temporary
+      - experiment
+      - deprecated
+  expires_at:
+    description: >-
+      The time, in UTC, after which the unit may be removed, returned or
+      decommissioned. Its form on each platform is the pattern of the encoding
+      that platform renders it with.
+    required: false
+  repository:
+    description: The source repository that defines the resource.
+    required: true
+    # https://host/path or git@host:path, with no user name, password or token.
+    pattern: "^(https://[^/@:]+(:[0-9]+)?/[^@]+|git@[^/:@]+:[^@]+)$"
+    # Two values that name the same repository compare equal after
+    # normalization to this form (normalize_repository in the generated Python).
+    canonical_form: >-
+      https://<host>/<path>: https scheme, lowercase host, no user name, no
+      trailing .git and no trailing slash. git@<host>:<path>.git and
+      ssh://git@<host>/<path>.git normalize to it.
+  owner:
+    description: >-
+      The team or role accountable for the resource. A team or role name,
+      never a person's name. Holds no personal information.
+    required: false
+  contact:
+    description: >-
+      Where to reach the owner: a team address or a channel, never a person's
+      own address. Holds no personal information.
+    required: false
+  cost_center:
+    description: The budget the resource is charged to.
+    required: false
+  protected:
+    description: Marks a resource that enforcement never removes.
+    required: false
+    allowed:
+      - "true"
+  schedule:
+    description: The schedule on which the resource is stopped and started.
+    required: false
+
+# A rule makes facts required when another fact has a given value.
+rules:
+  - id: temporary-requires-expires-at
+    description: A temporary resource states when it expires.
+    when:
+      fact: lifecycle
+      equals: temporary
+    require:
+      - expires_at
+  - id: experiment-requires-expires-at
+    description: An experiment states when it expires.
+    when:
+      fact: lifecycle
+      equals: experiment
+    require:
+      - expires_at
+
+# How a value is written on a platform. A `pattern` is a regular expression the
+# written value matches in full.
+encodings:
+  text:
+    description: The value as written.
+  url:
+    description: A repository URL, as written.
+  iso8601:
+    description: A UTC timestamp in ISO 8601 form ending in Z, for example 2026-12-01T00:00:00Z.
+    pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z$'
+  compact-utc:
+    description: A UTC timestamp as lowercase yyyymmddthhmmz, for example 20261201t0000z.
+    pattern: '^\d{8}t\d{4}z$'
+  gcp-label:
+    description: >-
+      A Google Cloud label value: lowercase; each character outside a-z, 0-9,
+      _ and - becomes _; at most 63 characters.
+
+# A rendering gives, for one platform, where each fact is written.
+#
+#   unit        what the contract attaches to on the platform: the required
+#               facts are present on the unit and resources inside it inherit
+#               them (aws: resource, azure: resource-group, gcp: project)
+#   carrier     what holds a fact. Known carriers: tag, label, annotation,
+#               resource-manager-tag, custom-field, registry-entry,
+#               inventory-record. The rendering's `carrier` is the default
+#               for its facts; a fact may set its own.
+#   key_prefix  optional text put before every key (default: none)
+#   required    optional: the required facts on this platform, in place of
+#               the `required` marks of the facts
+#
+# A fact is rendered as {key, encoding, carrier}. A fact whose carrier is
+# `registry-entry` has no key on the resource (`key: null`): the registry
+# entry of the repository carries it.
+renderings:
+  aws:
+    unit: resource
+    carrier: tag
+    # The published contract also carries the field names it had before 1.0
+    # (required_tags, valid_managed_by, valid_lifecycle, tag_validation).
+    legacy_aliases: true
+    facts:
+      project: {key: Project, encoding: text}
+      environment: {key: Environment, encoding: text}
+      managed_by: {key: ManagedBy, encoding: text}
+      lifecycle: {key: Lifecycle, encoding: text}
+      expires_at: {key: ExpiresAt, encoding: iso8601}
+      repository: {key: Repository, encoding: url}
+      owner: {key: Owner, encoding: text}
+      contact: {key: Contact, encoding: text}
+      cost_center: {key: CostCenter, encoding: text}
+      protected: {key: Protected, encoding: text}
+      schedule: {key: Schedule, encoding: text}
+  azure:
+    unit: resource-group
+    carrier: tag
+    facts:
+      project: {key: Project, encoding: text}
+      environment: {key: Environment, encoding: text}
+      managed_by: {key: ManagedBy, encoding: text}
+      lifecycle: {key: Lifecycle, encoding: text}
+      expires_at: {key: ExpiresAt, encoding: iso8601}
+      repository: {key: Repository, encoding: url}
+      owner: {key: Owner, encoding: text}
+      contact: {key: Contact, encoding: text}
+      cost_center: {key: CostCenter, encoding: text}
+      protected: {key: Protected, encoding: text}
+      schedule: {key: Schedule, encoding: text}
+  gcp:
+    unit: project
+    carrier: label
+    required:
+      - project
+      - environment
+      - managed_by
+      - lifecycle
+      - owner
+    # Google Cloud label keys and values allow only lowercase letters, digits,
+    # _ and -, so a URL, an address or an ISO 8601 timestamp cannot be a label
+    # value. These two patterns apply to facts carried by a label.
+    key_pattern: "^[a-z][a-z0-9_-]{0,62}$"
+    value_pattern: "^[a-z0-9_-]{0,63}$"
+    facts:
+      # `project` on Google Cloud reads as the Google Cloud project, so the
+      # fact is written under `workload`.
+      project: {key: workload, encoding: gcp-label}
+      environment: {key: environment, encoding: gcp-label}
+      managed_by: {key: managed-by, encoding: gcp-label}
+      lifecycle: {key: lifecycle, encoding: gcp-label}
+      expires_at: {key: expires-at, encoding: compact-utc}
+      repository: {key: null, carrier: registry-entry}
+      owner: {key: owner, encoding: gcp-label}
+      contact: {key: null, carrier: registry-entry}
+      cost_center: {key: cost-center, encoding: gcp-label}
+      protected: {key: protected, encoding: gcp-label}
+      schedule: {key: schedule, encoding: gcp-label}

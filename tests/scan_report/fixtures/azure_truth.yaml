@@ -1,0 +1,14 @@
+# Expected results for azure_inventory.json, scanned at 2030-06-15T00:00:00Z.
+schema_version: "1.0"
+platform: azure
+units:
+  - {id: "*/resourcegroups/acme-conforming", result: compliant, rules: []}
+  - {id: "*/resourcegroups/acme-missing-environment", result: non-compliant, rules: [missing-required]}
+  - {id: "*/resourcegroups/acme-missing-all", result: non-compliant, rules: [missing-required]}
+  - {id: "*/resourcegroups/acme-expired", result: non-compliant, rules: [expired]}
+  - {id: "*/resourcegroups/acme-expiry-unreadable", result: non-compliant, rules: [expiry-unreadable]}
+  - {id: "*/resourcegroups/acme-invalid-value", result: non-compliant, rules: [invalid-value]}
+  - {id: "*/resourcegroups/acme-protected", result: compliant, rules: [protected]}
+  - {id: "*/resourcegroups/acme-temporary", result: non-compliant, rules: [temporary-requires-expires-at]}
+  - {id: "*/resourcegroups/acme-expiring", result: compliant, rules: [expiring-soon]}
+  - {id: "*/resourcegroups/acme-mixed", result: compliant, rules: []}

@@ -1,0 +1,18 @@
+{
+  "value": [
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/Example-App-RG",
+      "name": "Example-App-RG",
+      "type": "Microsoft.Resources/resourceGroups",
+      "location": "westeurope",
+      "tags": {
+        "Project": "example"
+      },
+      "properties": {
+        "provisioningState": "Succeeded"
+      },
+      "createdTime": "2030-01-02T03:04:05.1234567Z"
+    }
+  ],
+  "nextLink": "https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups?api-version=2021-04-01&%24expand=createdTime&%24skiptoken=c3ludGhldGlj"
+}

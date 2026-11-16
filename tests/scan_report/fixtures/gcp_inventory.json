@@ -1,0 +1,371 @@
+{
+  "schema_version": "2.0",
+  "platform": "gcp",
+  "generated_at": "2030-06-15T00:00:00+00:00",
+  "scopes": [
+    {
+      "scope": "example-conforming",
+      "scope_type": "project",
+      "name": "example-conforming",
+      "state": "ACTIVE",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      }
+    },
+    {
+      "scope": "example-missing-environment",
+      "scope_type": "project",
+      "name": "example-missing-environment",
+      "state": "ACTIVE",
+      "tags": {
+        "workload": "acme",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      }
+    },
+    {
+      "scope": "example-expired",
+      "scope_type": "project",
+      "name": "example-expired",
+      "state": "ACTIVE",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "temporary",
+        "owner": "platform",
+        "expires-at": "20300601t0000z"
+      }
+    },
+    {
+      "scope": "example-expiry-unreadable",
+      "scope_type": "project",
+      "name": "example-expiry-unreadable",
+      "state": "ACTIVE",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "temporary",
+        "owner": "platform",
+        "expires-at": "next-week"
+      }
+    },
+    {
+      "scope": "example-invalid-value",
+      "scope_type": "project",
+      "name": "example-invalid-value",
+      "state": "ACTIVE",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "chef",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      }
+    },
+    {
+      "scope": "example-protected",
+      "scope_type": "project",
+      "name": "example-protected",
+      "state": "ACTIVE",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform",
+        "protected": "true"
+      }
+    },
+    {
+      "scope": "example-mixed",
+      "scope_type": "project",
+      "name": "example-mixed",
+      "state": "ACTIVE",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      }
+    },
+    {
+      "scope": "example-other-keys",
+      "scope_type": "project",
+      "name": "example-other-keys",
+      "state": "ACTIVE",
+      "tags": {
+        "app_name": "acme",
+        "env": "dev",
+        "owner": "platform",
+        "cost_center": "cc-0000"
+      }
+    },
+    {
+      "scope": "example-new",
+      "scope_type": "project",
+      "name": "example-new",
+      "state": "ACTIVE",
+      "tags": {
+        "workload": "acme",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-conforming",
+      "platform": "gcp",
+      "scope": "example-conforming",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-conforming",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      },
+      "state": null,
+      "created_at": "2029-01-01T00:00:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-missing-environment",
+      "platform": "gcp",
+      "scope": "example-missing-environment",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-missing-environment",
+      "tags": {
+        "workload": "acme",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      },
+      "state": null,
+      "created_at": "2029-01-01T00:00:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-expired",
+      "platform": "gcp",
+      "scope": "example-expired",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-expired",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "temporary",
+        "owner": "platform",
+        "expires-at": "20300601t0000z"
+      },
+      "state": null,
+      "created_at": "2029-01-01T00:00:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-expiry-unreadable",
+      "platform": "gcp",
+      "scope": "example-expiry-unreadable",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-expiry-unreadable",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "temporary",
+        "owner": "platform",
+        "expires-at": "next-week"
+      },
+      "state": null,
+      "created_at": "2029-01-01T00:00:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-invalid-value",
+      "platform": "gcp",
+      "scope": "example-invalid-value",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-invalid-value",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "chef",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      },
+      "state": null,
+      "created_at": "2029-01-01T00:00:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-protected",
+      "platform": "gcp",
+      "scope": "example-protected",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-protected",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform",
+        "protected": "true"
+      },
+      "state": null,
+      "created_at": "2029-01-01T00:00:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-mixed",
+      "platform": "gcp",
+      "scope": "example-mixed",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-mixed",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      },
+      "state": null,
+      "created_at": "2029-01-01T00:00:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-other-keys",
+      "platform": "gcp",
+      "scope": "example-other-keys",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-other-keys",
+      "tags": {
+        "app_name": "acme",
+        "env": "dev",
+        "owner": "platform",
+        "cost_center": "cc-0000"
+      },
+      "state": null,
+      "created_at": "2029-01-01T00:00:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//cloudresourcemanager.googleapis.com/projects/example-new",
+      "platform": "gcp",
+      "scope": "example-new",
+      "location": "global",
+      "resource_type": "cloudresourcemanager.googleapis.com/Project",
+      "name": "example-new",
+      "tags": {
+        "workload": "acme",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      },
+      "state": null,
+      "created_at": "2030-06-14T23:55:00Z",
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//compute.googleapis.com/projects/example-mixed/zones/europe-west3-a/instances/acme-vm",
+      "platform": "gcp",
+      "scope": "example-mixed",
+      "location": "europe-west3",
+      "resource_type": "compute.googleapis.com/Instance",
+      "name": "acme-vm",
+      "tags": {
+        "workload": "acme",
+        "environment": "dev",
+        "managed-by": "terraform",
+        "lifecycle": "persistent",
+        "owner": "platform"
+      },
+      "state": null,
+      "created_at": null,
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//storage.googleapis.com/projects/example-mixed/buckets/acme-bucket",
+      "platform": "gcp",
+      "scope": "example-mixed",
+      "location": "europe-west3",
+      "resource_type": "storage.googleapis.com/Bucket",
+      "name": "acme-bucket",
+      "tags": {},
+      "state": null,
+      "created_at": null,
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//serviceusage.googleapis.com/projects/example-mixed/services/compute.googleapis.com",
+      "platform": "gcp",
+      "scope": "example-mixed",
+      "location": "europe-west3",
+      "resource_type": "serviceusage.googleapis.com/Service",
+      "name": "compute.googleapis.com",
+      "tags": {},
+      "state": null,
+      "created_at": null,
+      "grade": "none",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//iam.googleapis.com/projects/example-mixed/serviceAccounts/acme",
+      "platform": "gcp",
+      "scope": "example-mixed",
+      "location": "europe-west3",
+      "resource_type": "iam.googleapis.com/ServiceAccount",
+      "name": "acme",
+      "tags": {},
+      "state": null,
+      "created_at": null,
+      "grade": "ownership",
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "//example.googleapis.com/projects/example-mixed/widgets/acme-widget",
+      "platform": "gcp",
+      "scope": "example-mixed",
+      "location": "europe-west3",
+      "resource_type": "example.googleapis.com/Widget",
+      "name": "acme-widget",
+      "tags": {},
+      "state": null,
+      "created_at": null,
+      "grade": "labels+ownership",
+      "estimated_monthly_cost": null
+    }
+  ],
+  "unclassified_types": {
+    "example.googleapis.com/Widget": 1
+  }
+}

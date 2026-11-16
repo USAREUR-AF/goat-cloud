@@ -1,0 +1,15 @@
+{
+  "totalRecords": 1,
+  "count": 1,
+  "resultTruncated": "false",
+  "data": [
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000",
+      "name": "example-subscription",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "tags": null,
+      "subscriptionState": "Enabled"
+    }
+  ],
+  "facets": []
+}

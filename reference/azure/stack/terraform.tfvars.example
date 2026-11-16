@@ -1,0 +1,15 @@
+subscription_id = "00000000-0000-0000-0000-000000000000"
+location        = "westeurope"
+repo_slug       = "example-repo"
+repository_url  = "https://github.com/example-org/example-repo"
+project         = "example"
+environment     = "dev"
+expires_at      = "2030-01-31T00:00:00Z"
+
+# Outputs of ../bootstrap.
+resource_group_name   = "example-dev-reference"
+state_resource_group  = "example-repo-bootstrap"
+state_storage_account = "examplerepo00000000"
+
+budget_amount      = 5
+budget_start_month = "2030-01"

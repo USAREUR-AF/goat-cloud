@@ -1,0 +1,5 @@
+github_org  = "example-org"
+github_repo = "example-repo"
+
+# Who approves a teardown. Look an id up with: gh api users/<login> --jq .id
+teardown_reviewer_user_ids = [1234567]

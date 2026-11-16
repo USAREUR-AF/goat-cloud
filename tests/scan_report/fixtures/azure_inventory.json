@@ -1,0 +1,340 @@
+{
+  "schema_version": "2.0",
+  "platform": "azure",
+  "generated_at": "2030-06-15T00:00:00+00:00",
+  "scopes": [
+    {
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "scope_type": "subscription",
+      "name": "example-subscription",
+      "state": "Enabled",
+      "tags": {}
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-conforming",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-conforming",
+      "kind": null,
+      "container": "acme-conforming",
+      "tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/acme/example-repo"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-missing-environment",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-missing-environment",
+      "kind": null,
+      "container": "acme-missing-environment",
+      "tags": {
+        "Project": "acme",
+        "ManagedBy": "terraform",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/acme/example-repo"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-missing-all",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-missing-all",
+      "kind": null,
+      "container": "acme-missing-all",
+      "tags": {},
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-expired",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-expired",
+      "kind": null,
+      "container": "acme-expired",
+      "tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "temporary",
+        "Repository": "https://git.example/acme/example-repo",
+        "ExpiresAt": "2030-06-01T00:00:00Z"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-expiry-unreadable",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-expiry-unreadable",
+      "kind": null,
+      "container": "acme-expiry-unreadable",
+      "tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "temporary",
+        "Repository": "https://git.example/acme/example-repo",
+        "ExpiresAt": "next-week"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-invalid-value",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-invalid-value",
+      "kind": null,
+      "container": "acme-invalid-value",
+      "tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "chef",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/acme/example-repo"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-protected",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-protected",
+      "kind": null,
+      "container": "acme-protected",
+      "tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/acme/example-repo",
+        "Protected": "true"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-temporary",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-temporary",
+      "kind": null,
+      "container": "acme-temporary",
+      "tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "temporary",
+        "Repository": "https://git.example/acme/example-repo"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-expiring",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-expiring",
+      "kind": null,
+      "container": "acme-expiring",
+      "tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "temporary",
+        "Repository": "https://git.example/acme/example-repo",
+        "ExpiresAt": "2030-06-20T00:00:00Z"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-mixed",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.resources/subscriptions/resourcegroups",
+      "name": "acme-mixed",
+      "kind": null,
+      "container": "acme-mixed",
+      "tags": {
+        "project": "acme",
+        "environment": "dev",
+        "managedby": "terraform",
+        "lifecycle": "persistent",
+        "repository": "https://git.example/acme/example-repo"
+      },
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-mixed/providers/microsoft.network/virtualnetworks/acme-vnet",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.network/virtualnetworks",
+      "name": "acme-vnet",
+      "kind": null,
+      "container": "acme-mixed",
+      "tags": {},
+      "inherited_tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/acme/example-repo"
+      },
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-mixed/providers/microsoft.compute/virtualmachines/acme-vm",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.compute/virtualmachines",
+      "name": "acme-vm",
+      "kind": null,
+      "container": "acme-mixed",
+      "tags": {
+        "project": "acme",
+        "ManagedBy": "chef"
+      },
+      "inherited_tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/acme/example-repo"
+      },
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-mixed/providers/microsoft.authorization/roleassignments/acme-assignment",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "global",
+      "resource_type": "microsoft.authorization/roleassignments",
+      "name": "acme-assignment",
+      "kind": null,
+      "container": "acme-mixed",
+      "tags": {},
+      "inherited_tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/acme/example-repo"
+      },
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-mixed/providers/example.provider/widgets/acme-widget",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "example.provider/widgets",
+      "name": "acme-widget",
+      "kind": null,
+      "container": "acme-mixed",
+      "tags": {},
+      "inherited_tags": {
+        "Project": "acme",
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Lifecycle": "persistent",
+        "Repository": "https://git.example/acme/example-repo"
+      },
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    },
+    {
+      "resource_id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/acme-missing-all/providers/microsoft.compute/disks/acme-disk",
+      "platform": "azure",
+      "scope": "00000000-0000-0000-0000-000000000000",
+      "location": "westeurope",
+      "resource_type": "microsoft.compute/disks",
+      "name": "acme-disk",
+      "kind": null,
+      "container": "acme-missing-all",
+      "tags": {},
+      "inherited_tags": {},
+      "state": null,
+      "provisioning_state": "Succeeded",
+      "created_at": null,
+      "estimated_monthly_cost": null
+    }
+  ]
+}

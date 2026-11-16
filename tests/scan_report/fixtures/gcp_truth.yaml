@@ -1,0 +1,13 @@
+# Expected results for gcp_inventory.json, scanned at 2030-06-15T00:00:00Z with no mapping.
+schema_version: "1.0"
+platform: gcp
+units:
+  - {id: example-conforming, result: compliant, rules: []}
+  - {id: example-missing-environment, result: non-compliant, rules: [missing-required]}
+  - {id: example-expired, result: non-compliant, rules: [expired]}
+  - {id: example-expiry-unreadable, result: non-compliant, rules: [expiry-unreadable]}
+  - {id: example-invalid-value, result: non-compliant, rules: [invalid-value]}
+  - {id: example-protected, result: compliant, rules: [protected]}
+  - {id: example-mixed, result: compliant, rules: []}
+  - {id: example-other-keys, result: non-compliant, rules: [missing-required]}
+  - {id: example-new, result: pending, rules: [missing-required]}

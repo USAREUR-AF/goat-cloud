@@ -1,0 +1,17 @@
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Vendored deps — installed locally via pip, deployed via terraform layer
+# These are needed for arch_custom.py (HCL parsing) and YAML processing
+_yaml/
+bin/
+hcl2/
+lark/
+regex/
+yaml/
+
+# pip metadata
+*.dist-info/
+*.egg-info/
+*.data/

@@ -1,0 +1,13 @@
+# A deployment that names its labels differently and requires another set.
+contract_schema_version: "1.0"
+renderings:
+  gcp:
+    required:
+      - project
+      - environment
+      - cost_center
+      - owner
+    facts:
+      project: {key: app_name}
+      environment: {key: env}
+      cost_center: {key: cost_center}

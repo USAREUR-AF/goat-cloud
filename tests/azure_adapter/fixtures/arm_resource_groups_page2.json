@@ -1,0 +1,14 @@
+{
+  "value": [
+    {
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-untagged-rg",
+      "name": "example-untagged-rg",
+      "type": "Microsoft.Resources/resourceGroups",
+      "location": "westeurope",
+      "properties": {
+        "provisioningState": "Succeeded"
+      },
+      "createdTime": "2030-01-03T00:00:00.0000000Z"
+    }
+  ]
+}

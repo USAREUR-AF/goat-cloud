@@ -1,0 +1,75 @@
+# Destroys ../../stack, whose state is always stack.tfstate: no input chooses
+# another state. Started by hand. Signs in through workload identity
+# federation for the GitHub environment "teardown", which must allow the
+# branch main only and require a reviewer (README, B1).
+name: Teardown
+
+on:
+  workflow_dispatch:
+    inputs:
+      resource_group_id:
+        description: Id of the stack's resource group; the run stops unless the stack's state manages it
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: terraform-stack
+  cancel-in-progress: false
+
+env:
+  ARM_USE_OIDC: "true"
+  ARM_USE_AZUREAD: "true"
+  ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+  ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+  TF_VAR_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+  TF_VAR_state_resource_group: ${{ vars.STATE_RESOURCE_GROUP }}
+  TF_VAR_state_storage_account: ${{ vars.STATE_STORAGE_ACCOUNT }}
+  TF_INPUT: "false"
+  RESOURCE_GROUP_ID: ${{ inputs.resource_group_id }}
+
+jobs:
+  teardown:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: teardown
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: stack
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: azure/login@7184910d9eb2b1c5e48f7073824a90609bb9b6d6 # v2.3.1
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: 1.11.4
+
+      # The key is the one in backend.tf, stack.tfstate.
+      - name: Init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${TF_VAR_state_resource_group}" \
+            -backend-config="storage_account_name=${TF_VAR_state_storage_account}"
+
+      - name: Refuse a state that does not hold the named resource group
+        run: |
+          terraform state list -id="${RESOURCE_GROUP_ID}" | grep -qx 'azurerm_resource_group.app' || {
+            echo "stack.tfstate does not manage ${RESOURCE_GROUP_ID} as the stack's resource group." >&2
+            exit 1
+          }
+
+      - name: Destroy
+        run: terraform destroy -auto-approve

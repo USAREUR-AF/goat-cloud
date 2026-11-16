@@ -1,0 +1,44 @@
+# Example deployment mapping. A mapping adapts contract.yaml to one
+# deployment: key names, what holds a fact, the required set, and the
+# environment names. It changes nothing else.
+#
+#   scripts/contract-gen --mapping contract/mapping.example.yaml --out-dir /tmp/contract
+#
+# Every name below is an illustration.
+
+contract_schema_version: "1.0"
+
+# Replaces the required set on every platform.
+required:
+  - project
+  - environment
+  - managed_by
+  - lifecycle
+  - repository
+  - owner
+
+# The environment names this deployment accepts, and the ones whose resources
+# enforcement never removes.
+environment:
+  allowed: [dev, staging, live]
+  protected_values: [live]
+
+renderings:
+  aws:
+    facts:
+      cost_center: {key: BillingCode}
+  gcp:
+    # Replaces the required set on this platform only.
+    required:
+      - project
+      - environment
+      - managed_by
+      - owner
+      - cost_center
+    facts:
+      project: {key: app}
+      # A resource manager tag instead of a label.
+      environment: {key: stage, carrier: resource-manager-tag}
+      cost_center: {key: billing_code}
+      # A label instead of a field of the registry entry.
+      contact: {key: team-channel, carrier: label, encoding: gcp-label}

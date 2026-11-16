@@ -1,0 +1,195 @@
+# Capability parity across clouds: the data behind docs/cloud-parity.md.
+#
+# scripts/parity-gen renders the tables of that page from this file, and
+# `scripts/parity-gen --check` fails when the page differs.
+#
+# status      built     the code is complete and usable today
+#             written   the document or code exists; not yet in use end to end
+#             designed  decided; no code
+# mechanism   how the capability is delivered on that cloud
+# compensating_step
+#             what an adopter does where the cloud's mechanism is weaker than
+#             on the other clouds
+# evidence    paths that hold the code or document, for built and written
+#             cells; `scripts/parity-gen --verify-evidence` requires each one
+schema_version: "1.0"
+
+clouds:
+  aws: AWS
+  azure: Azure
+  gcp: Google Cloud
+
+capabilities:
+  - id: unit
+    name: Unit the contract attaches to
+    clouds:
+      aws:
+        mechanism: The resource. Every resource carries the contract's tags.
+        status: built
+        evidence: [modules/aws/compliance-tags]
+      azure:
+        mechanism: The resource group. The group carries the tags and is removed as a whole.
+        status: written
+        evidence: [docs/build-standard-azure.md]
+      gcp:
+        mechanism: The project. The project carries the labels and is removed as a whole.
+        status: written
+        evidence: [docs/build-standard-gcp.md]
+
+  - id: declare-ownership
+    name: Declare ownership
+    clouds:
+      aws:
+        mechanism: Tags from the provider's `default_tags`, produced by `modules/aws/compliance-tags`.
+        status: built
+        evidence: [modules/aws/compliance-tags]
+      azure:
+        mechanism: Tags on the resource group and on each resource, produced by `modules/azure/compliance-tags`.
+        status: written
+        compensating_step: The provider has no default tags and a resource does not inherit its group's tags. Assign the built-in policy "Inherit a tag from the resource group" once per tag name.
+        evidence: [modules/azure/compliance-tags]
+      gcp:
+        mechanism: Labels from the provider's `default_labels`, produced by `modules/gcp/compliance-labels`.
+        status: written
+        compensating_step: A label value cannot hold a URL or an ISO 8601 timestamp. The repository URL is carried by the registry entry, and the expiry is written as `yyyymmddthhmmz`.
+        evidence: [modules/gcp/compliance-labels]
+
+  - id: register
+    name: Register a repository and its state
+    clouds:
+      aws:
+        mechanism: SSM parameter `/<project>/<environment>/iac-registry/<slug>`, written by `modules/aws/iac-registry`.
+        status: built
+        evidence: [modules/aws/iac-registry]
+      azure:
+        mechanism: Blob `iac-registry/<slug>.json` beside the state, in a storage account tagged `role=iac-registry`.
+        status: written
+        evidence: [modules/azure/iac-registry]
+      gcp:
+        mechanism: Object `iac-registry/<slug>.json` beside the state, in a bucket labelled `role=iac-registry`.
+        status: written
+        evidence: [modules/gcp/iac-registry]
+
+  - id: inventory
+    name: List every resource
+    clouds:
+      aws:
+        mechanism: Resource Groups Tagging API, plus per-service listing for untagged resources.
+        status: built
+        evidence: [modules/aws/compliance-scanner/lambda/utils/aws_resources.py]
+      azure:
+        mechanism: Azure Resource Graph, over subscriptions or a management group. Checked read-only against a live subscription.
+        status: built
+        evidence: [adapters/azure/inventory.py]
+      gcp:
+        mechanism: Cloud Asset Inventory `searchAllResources`, over an organization, folder or project. Checked read-only against a live project.
+        status: built
+        evidence: [adapters/gcp/inventory.py]
+
+  - id: graded-types
+    name: Decide which types are graded
+    clouds:
+      aws:
+        mechanism: Exclusion rules for resources the cloud creates by itself, and a list of types that cannot carry tags.
+        status: built
+        evidence: [modules/aws/compliance-scanner/lambda/utils/exclusions.py]
+      azure:
+        mechanism: Every listed resource is graded; a resource is satisfied by its resource group's tags.
+        status: built
+        evidence: [goatcloud/profiles.py]
+      gcp:
+        mechanism: A class per type (`resource`, `resource-unlabelable`, `record`); only resources are graded.
+        status: built
+        compensating_step: A large share of inventory records are not deployed resources. A type with no class is graded as a resource and listed as unclassified; add it to `adapters/gcp/resource_types.yaml`.
+        evidence: [adapters/gcp/resource_types.yaml]
+
+  - id: scan-report
+    name: Grade against the contract and report
+    clouds:
+      aws:
+        mechanism: Nightly scanner Lambda. Report format 1.0 as JSON, Markdown and HTML.
+        status: built
+        evidence: [modules/aws/compliance-scanner]
+      azure:
+        mechanism: "`python -m goatcloud scan --platform azure`. Report format 2.0 as JSON and HTML."
+        status: built
+        compensating_step: Run it from a scheduled CI job with workload identity federation; a scheduled runtime in the cloud is designed.
+        evidence: [goatcloud]
+      gcp:
+        mechanism: "`python -m goatcloud scan --platform gcp`. Report format 2.0 as JSON and HTML."
+        status: built
+        compensating_step: Run it from a scheduled CI job with workload identity federation; a scheduled runtime in the cloud is designed.
+        evidence: [goatcloud]
+
+  - id: ownership-from-state
+    name: Ownership from registered state
+    clouds:
+      aws:
+        mechanism: Terraform state and Pulumi checkpoints in S3; CloudFormation stacks.
+        status: built
+        evidence: [modules/aws/compliance-scanner/lambda/scanners/drift_detector.py]
+      azure:
+        mechanism: Registry blobs and state in Azure Storage.
+        status: designed
+      gcp:
+        mechanism: Registry objects and state in Cloud Storage.
+        status: designed
+
+  - id: cost
+    name: Cost
+    clouds:
+      aws:
+        mechanism: Cost Explorer for billed spend, plus price tables for a monthly estimate per resource.
+        status: built
+        evidence: [modules/aws/compliance-scanner/lambda/utils/ec2_pricing.py]
+      azure:
+        mechanism: Cost Management query API.
+        status: designed
+      gcp:
+        mechanism: Cloud Billing export in BigQuery.
+        status: designed
+        compensating_step: The export exists only when the adopter has enabled it; without it, cost is reported as unknown.
+
+  - id: expiry-teardown
+    name: Tear down an expired unit
+    clouds:
+      aws:
+        mechanism: Dispatch the owning repository's `teardown.yml` at the stack's expiry.
+        status: built
+        evidence: [modules/aws/stack-reaper]
+      azure:
+        mechanism: The same dispatch; the workflow removes the resource group.
+        status: designed
+      gcp:
+        mechanism: The same dispatch; the workflow removes the project.
+        status: designed
+
+  - id: delete-one
+    name: Delete one resource, with approval
+    clouds:
+      aws:
+        mechanism: An executor role whose deletes on EC2, RDS, ECS, Lambda, ElastiCache and load balancers are allowed only on resources not tagged `Protected`; other types are protected by the executor's checks and the approval.
+        status: built
+        evidence: [modules/aws/hunterkiller]
+      azure:
+        mechanism: An executor role limited to named scopes and a short list of delete operations.
+        status: designed
+        compensating_step: A role assignment cannot be conditioned on tags for most resource types. Limit the role by scope and by operation list.
+      gcp:
+        mechanism: An executor role limited to named projects and a short list of delete permissions.
+        status: designed
+        compensating_step: IAM cannot be conditioned on labels for most resource types. Limit the role by scope and by permission list.
+
+  - id: refuse-at-creation
+    name: Refuse at creation
+    clouds:
+      aws:
+        mechanism: An AWS Organizations tag policy rendered from the contract.
+        status: designed
+      azure:
+        mechanism: An Azure Policy initiative rendered from the contract.
+        status: designed
+      gcp:
+        mechanism: Organization policy custom constraints rendered from the contract.
+        status: designed
+        compensating_step: Custom constraints cover only the services that support them; the scan reports what they do not cover.
