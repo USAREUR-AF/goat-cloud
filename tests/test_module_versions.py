@@ -21,15 +21,13 @@ else:
     PUBLIC_MODULES = sorted(
         f"modules/aws/{p.name}" for p in (_ROOT / "modules" / "aws").iterdir() if p.is_dir() and p.name != "shared"
     )
-# Owned on another branch; it gains its constraints there.
-PENDING = {"modules/aws/iac-registry"}
 
 
 def _terraform_blocks(module):
     return "\n".join((module / name).read_text() for name in sorted(p.name for p in module.glob("*.tf")))
 
 
-@pytest.mark.parametrize("path", [p for p in PUBLIC_MODULES if p not in PENDING])
+@pytest.mark.parametrize("path", PUBLIC_MODULES)
 def test_module_states_its_versions(path):
     source = _terraform_blocks(_ROOT / path)
     assert re.search(r'required_version\s*=\s*">=\s*\d+\.\d+', source), path
