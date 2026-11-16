@@ -1,5 +1,7 @@
 # iac-registry (Azure)
 
+**Status: new.** AWS support is demonstrated and stable; Azure and Google Cloud support is new and may change between releases.
+
 Writes one registry entry per repository: the blob
 `iac-registry/<repo_slug>.json` in the container that holds the repository's
 Terraform state. A scanner finds state storage accounts by tag, lists the

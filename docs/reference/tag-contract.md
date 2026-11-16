@@ -87,7 +87,7 @@ The enforcement and the scanner on AWS also read these tags, some of them in mor
 | `Name` | scanner, dashboard | display name |
 | `Service`, `Subcomponent`, `Purpose` | dashboard, reports | grouping, attributed cost, context in findings |
 | `Protected` | enforcement | `true`, `yes` or `1` exempts the resource from single-resource deletion |
-| `Contact`, `OwnerEmail`, `Owner` | enforcement notifier | the address warnings go to, in that order |
+| `Contact` | enforcement notifier | the address warnings go to; `contact_tag_keys` sets which keys are read, in order (default `Contact`) |
 | `Schedule`, `AutoStop`, `AutoShutdown`, `BusinessHours`, `OffHours` | scanner | the presence of any one satisfies the schedule check |
 
 ## Deployment mapping

@@ -1,5 +1,7 @@
 # compliance-tags (Azure)
 
+**Status: new.** AWS support is demonstrated and stable; Azure and Google Cloud support is new and may change between releases.
+
 Renders the tag contract as a map for Azure resources and resource groups. The
 module declares no provider and creates no resource.
 
