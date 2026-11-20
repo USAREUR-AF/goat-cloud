@@ -204,6 +204,62 @@ footer p { color: var(--quiet); max-width: 34em; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 @media print { .copy, .skip { display: none; } }
+/* first screen: wordmark, tagline, Star button, command, the scan replay, the numbers at the fold */
+.hero { position: relative; overflow: hidden; }
+.hero .wrap { position: relative; z-index: 1; min-height: calc(100vh - 64px); min-height: calc(100svh - 64px); display: flex; flex-direction: column; padding-block: 18px 14px; }
+.hero .herogrid { flex: 1; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px 48px; padding-bottom: 14px; }
+.bgcode { position: absolute; z-index: 0; right: 0; top: 0; margin: 0; padding: 22px 28px; font: 12.5px/1.55 var(--mono); color: var(--quiet); opacity: .15; white-space: pre; text-align: right; pointer-events: none; user-select: none; overflow: hidden; max-width: 60%; max-height: 100%;
+  -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent 92%); mask-image: linear-gradient(180deg, #000 30%, transparent 92%); }
+.promptline { font: 600 15px/1.4 var(--mono); color: var(--accent); }
+.promptline .pr { color: var(--quiet); }
+.cursor { display: inline-block; width: .6em; height: 1.05em; margin-left: .35em; vertical-align: -.18em; background: var(--accent); animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.hero h1.wordmark { font: 900 clamp(2.9rem, 6.2vw, 5.25rem)/1 var(--mono); letter-spacing: -.05em; margin-top: 8px; }
+.hero .tagline { font: 600 clamp(1.2rem, 1.9vw, 1.55rem)/1.25 var(--serif); color: var(--accent); margin-top: 14px; max-width: 24em; }
+.hero .lede { font-size: clamp(1rem, 1.3vw, 1.1rem); max-width: 38em; margin-top: 14px; }
+.btn.star svg { width: 18px; height: 18px; margin-right: 9px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+.hero .cmd { margin-top: 16px; }
+.hero .tagnote { font-size: 13.5px; margin-top: 10px; }
+.herofig { display: flex; flex-direction: column; gap: 14px; }
+.herofig figcaption { font-size: 13.5px; margin-top: 0; }
+.scan { background: var(--term-bg); color: var(--term-fg); border-radius: 3px; font: 12.5px/1.5 var(--mono); padding: 12px 14px 10px; }
+.scanhead { display: flex; justify-content: space-between; gap: 12px; color: var(--term-dim); letter-spacing: .04em; }
+.scanbar { height: 3px; background: #ffffff1f; margin: 8px 0 8px; }
+.scanbar i { display: block; height: 100%; width: 0; background: var(--term-ok); }
+.scanlog { list-style: none; margin: 0; padding: 0; height: 9em; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
+.scanlog li { flex: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scanlog .ok { color: var(--term-ok); }
+.scanlog .sev { font-weight: 700; color: #f2b85a; }
+.scanlog .high { color: #ff8f84; }
+.scanlog .dim { color: var(--term-dim); }
+.scanlog .sum { color: var(--term-fg); font-weight: 700; }
+.tagwrap { padding: 0; }
+.tagwrap .stamp { opacity: 0; transform: rotate(4deg) scale(1.6); transition: opacity .25s, transform .25s; }
+.tagwrap.found .stamp { opacity: 1; transform: rotate(4deg) scale(1); }
+.tagwrap .tag { transition: background .25s; }
+.tagwrap.found .tag { background: var(--crit); }
+.tagwrap .tagin { padding-top: 16px; padding-bottom: 14px; }
+.tagwrap .tag dl { margin-top: 8px; font-size: 13.5px; }
+.tagwrap .tag dt, .tagwrap .tag dd { padding: 4px 0; }
+.tagwrap .tag dt { padding-right: 16px; }
+.hero .numbers { margin-top: auto; }
+.hero .source { margin-top: 10px; }
+figure.overview { margin-top: 44px; }
+@media (max-width: 960px) {
+  .hero .herogrid { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .bgcode { max-width: 100%; opacity: .09; }
+  .hero .numbers { margin-top: 28px; }
+}
+@media (max-width: 640px) {
+  .bgcode { display: none; }
+  .top nav li:not(:last-child) { display: none; }
+  .top nav { margin-left: auto; }
+  .top .wrap { flex-wrap: nowrap; }
+  .hero .wrap { padding-block: 22px 18px; }
+  .hero .actions { gap: 10px; }
+  .hero .btn { padding: 10px 14px; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .cursor { animation: none; } .tagwrap .stamp, .tagwrap .tag { transition: none; } }
 </style>
 </head>
 <body>
@@ -226,21 +282,55 @@ footer p { color: var(--quiet); max-width: 34em; }
 
 <main id="content">
 <div class="hero" id="top">
+  <pre class="bgcode" aria-hidden="true">{
+  &quot;category&quot;: &quot;lifecycle_compliance&quot;,
+  &quot;severity&quot;: &quot;HIGH&quot;,
+  &quot;resource_type&quot;: &quot;ec2:instance&quot;,
+  &quot;resource_name&quot;: &quot;load-gen-1&quot;,
+  &quot;region&quot;: &quot;us-east-1&quot;,
+  &quot;state&quot;: &quot;running&quot;,
+  &quot;issue&quot;: &quot;Resource expired 3 days ago (ExpiresAt: 2026-11-17T18:00:00Z)&quot;,
+  &quot;tags&quot;: {
+    &quot;Project&quot;: &quot;acme&quot;,
+    &quot;Environment&quot;: &quot;dev&quot;,
+    &quot;ManagedBy&quot;: &quot;terraform&quot;,
+    &quot;Lifecycle&quot;: &quot;temporary&quot;,
+    &quot;Repository&quot;: &quot;https://git.acme.example/acme/load-test-lab&quot;,
+    &quot;Service&quot;: &quot;load-test&quot;,
+    &quot;ExpiresAt&quot;: &quot;2026-11-17T18:00:00Z&quot;,
+    &quot;Contact&quot;: &quot;perf-team@acme.example&quot;,
+    &quot;Name&quot;: &quot;load-gen-1&quot;
+  },
+  &quot;running_duration_days&quot;: 17,
+  &quot;estimated_monthly_cost&quot;: 124.1,
+  &quot;recommendation&quot;: &quot;Delete this resource or update ExpiresAt to extend its lifecycle.&quot;
+}</pre>
   <div class="wrap">
     <div class="herogrid">
-      <div>
-        <p class="eyebrow">Open source · Apache-2.0 · AWS, Azure, Google Cloud</p>
-        <h1>Every cloud resource has an owner, a purpose and a lifetime that anyone can look up.</h1>
-        <p class="lede">Developers deploy from their own repositories with no central gate and no ticket. What has no owner, or has outlived its stated expiry, is found each night, its owner is warned, and it is removed.</p>
+      <div class="herotext">
+        <p class="promptline" aria-hidden="true"><span class="pr">$</span> python -m goatcloud scan<span class="cursor"></span></p>
+        <h1 class="wordmark">goat-cloud</h1>
+        <p class="tagline">Every cloud resource has an owner, a purpose and a lifetime that anyone can look up.</p>
+        <p class="lede">Developers deploy from their own repositories with no central gate and no ticket. Each night a scan finds what has no owner or has outlived its stated expiry; its owner is warned, and it is removed.</p>
+        <p class="actions">
+          <a class="btn primary star" href="https://github.com/USAREUR-AF/goat-cloud"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>Star on GitHub</a>
+          <a class="btn" href="#try">Try the demo</a>
+          <a class="btn" href="https://github.com/USAREUR-AF/goat-cloud/tree/main/docs">Docs</a>
+        </p>
         <div class="cmd" role="group" aria-label="Run the dashboard on synthetic data">
           <pre><code id="c-demo">git clone https://github.com/USAREUR-AF/goat-cloud &amp;&amp; cd goat-cloud
 pip install boto3 &amp;&amp; python3 demo/serve.py</code></pre>
           <button class="copy" type="button" data-copy="c-demo">Copy</button>
         </div>
-        <p class="tagnote">The dashboard on synthetic data at <code>http://localhost:8888</code>. No cloud account, no credentials, no AWS call.</p>
+        <p class="tagnote">The dashboard on synthetic data at <code>http://localhost:8888</code>. No cloud account, no credentials, no AWS call. Open source · Apache-2.0 · AWS, Azure, Google Cloud.</p>
       </div>
-      <div>
-        <div class="tagwrap" role="img" aria-label="A resource tag for the EC2 instance load-gen-1 in the synthetic demo estate, with the six facts of the contract: project acme, environment dev, managed by terraform, lifecycle temporary, its repository, and an expiry; stamped expired">
+      <figure class="herofig" aria-labelledby="scan-cap">
+        <div class="scan" id="scan" role="img" aria-label="A replay of the demo scan: it reads 152 resources in order, passes the owned ones, and stops at load-gen-1, an EC2 instance whose ExpiresAt passed 3 days ago, which it marks as a HIGH finding; the scan ends with 152 resources and 29 findings">
+          <div class="scanhead"><span>nightly scan · us-east-1</span><span id="scan-n">0 of 152</span></div>
+          <div class="scanbar"><i id="scan-bar"></i></div>
+          <ol class="scanlog" id="scan-log"></ol>
+        </div>
+        <div class="tagwrap" id="tagwrap">
           <div class="tag"><div class="tagin">
             <span class="stamp">Expired</span>
             <div class="res">ec2:instance</div>
@@ -255,25 +345,24 @@ pip install boto3 &amp;&amp; python3 demo/serve.py</code></pre>
             </dl>
           </div></div>
         </div>
-        <p class="tagnote">The contract is six facts on every resource. This one is from the synthetic demo estate; its scan finding reads "Resource expired 3 days ago". A drawing of the tags, not a capture.</p>
-      </div>
+        <figcaption id="scan-cap">A replay of the demo scan: the resources, their order and the findings are from <code>demo/data/compliance-report.json</code>, which <code>python3 demo/generate.py</code> writes. The tag is a drawing of the six facts on load-gen-1.</figcaption>
+      </figure>
     </div>
-
-    <figure style="margin-top:44px">
-      <a href="img/overview.png"><img class="shot" src="img/overview.png" width="2040" height="1500" alt="The goat-cloud dashboard overview on synthetic data: 152 resources tracked, 16 high, 9 medium and 2 low severity findings, 14 pending destroys, and the last scan taking 38.2 seconds"></a>
-      <figcaption>A real capture: the dashboard overview, running on this repository's synthetic demo data. Select a capture to open it at full size.</figcaption>
-    </figure>
+    <ul class="numbers" aria-label="Four numbers">
+      <li><b>6</b><span>facts on every resource: project, environment, managing tool, lifecycle, repository, and an expiry when it is not meant to last</span></li>
+      <li><b>8</b><span>deployment tools take part on equal terms: Terraform, OpenTofu, Pulumi, CloudFormation, Serverless Framework, CDK, SAM, Copilot</span></li>
+      <li><b>1,831</b><span>tests pass from a fresh clone; none needs a cloud credential</span></li>
+      <li><b>152 / 29</b><span>resources and findings in one scan of the synthetic demo estate, from one command</span></li>
+    </ul>
+    <p class="source">The command or source behind each figure is in <a href="#try">Try it</a>.</p>
   </div>
 </div>
 
 <div class="wrap">
-  <ul class="numbers" aria-label="Four numbers">
-    <li><b>6</b><span>facts on every resource: project, environment, managing tool, lifecycle, repository, and an expiry when it is not meant to last</span></li>
-    <li><b>8</b><span>deployment tools take part on equal terms: Terraform, OpenTofu, Pulumi, CloudFormation, Serverless Framework, CDK, SAM, Copilot</span></li>
-    <li><b>1,831</b><span>tests pass from a fresh clone; none needs a cloud credential</span></li>
-    <li><b>152 / 29</b><span>resources and findings in one scan of the synthetic demo estate, from one command</span></li>
-  </ul>
-  <p class="source">The command or source behind each figure is in <a href="#try">Try it</a>.</p>
+  <figure class="overview">
+    <a href="img/overview.png"><img class="shot" src="img/overview.png" width="2040" height="1500" alt="The goat-cloud dashboard overview on synthetic data: 152 resources tracked, 16 high, 9 medium and 2 low severity findings, 14 pending destroys, and the last scan taking 38.2 seconds"></a>
+    <figcaption>A real capture: the dashboard overview, running on this repository's synthetic demo data. Select a capture to open it at full size.</figcaption>
+  </figure>
 </div>
 
 <section id="what" aria-labelledby="what-h">
@@ -493,6 +582,41 @@ document.addEventListener('click', function (e) {
   var select = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); };
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, select); else select();
 });
+</script>
+<script>
+// The hero scan replay. Rows are resources from the demo report, at their real positions in the scan (0-based).
+// One row every 0.7 s; at load-gen-1 the tag is stamped; the replay ends on the scan's totals and restarts.
+// With reduced motion it shows the finished replay.
+(function () {
+  var log = document.getElementById('scan-log'); if (!log) return;
+  var bar = document.getElementById('scan-bar'), cnt = document.getElementById('scan-n'), tag = document.getElementById('tagwrap');
+  var ROWS = [{"i": 0, "type": "ec2:vpc", "name": "acme-dev"}, {"i": 27, "type": "events:rule", "name": "acme-dev-nightly-scan"}, {"i": 34, "type": "s3:bucket", "name": "acme-tf-state"}, {"i": 73, "type": "s3:bucket", "name": "acme-dev-storefront-uploads"}, {"i": 104, "type": "ec2:instance", "name": "pipeline-dev-batch-worker", "sev": "MEDIUM", "issue": "Schedulable resource running without schedule tags"}, {"i": 116, "type": "ec2:instance", "name": "load-gen-1", "sev": "HIGH", "issue": "Resource expired 3 days ago"}, {"i": 132, "type": "ec2:instance", "name": "jenkins-old", "sev": "HIGH", "issue": "Missing required tags: Project, Environment, ManagedBy, Lifecycle, Repository"}, {"i": 151, "type": "ec2:volume", "name": "pipeline-dev-archive", "sev": "LOW", "issue": "Resource running for 140 days without Lifecycle tag"}, {"sum": "152 resources, 29 findings"}];
+  var TOTAL = 152, EVERY = 0.7, HOLD = 4.0;
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function row(r) {
+    var li = document.createElement('li');
+    if (r.sum) { li.innerHTML = '<span class="sum">' + esc(r.sum) + '</span>'; return li; }
+    if (!r.sev) { li.innerHTML = '<span class="ok">ok  </span>  ' + esc(r.type) + '  ' + esc(r.name); return li; }
+    li.innerHTML = '<span class="sev' + (r.sev === 'HIGH' ? ' high' : '') + '">' + r.sev + '</span>  ' + esc(r.type) + '  ' + esc(r.name) + '  <span class="dim">' + esc(r.issue) + '</span>';
+    return li;
+  }
+  function show(k) {
+    log.innerHTML = '';
+    var found = false, idx = 0;
+    for (var i = 0; i < k && i < ROWS.length; i++) { log.appendChild(row(ROWS[i])); if (ROWS[i].name === 'load-gen-1') found = true; if (ROWS[i].i != null) idx = ROWS[i].i + 1; if (ROWS[i].sum) idx = TOTAL; }
+    cnt.textContent = idx + ' of ' + TOTAL; bar.style.width = (100 * idx / TOTAL).toFixed(1) + '%';
+    tag.classList.toggle('found', found);
+  }
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { show(ROWS.length); return; }
+  var CYCLE = ROWS.length * EVERY + HOLD, last = -1, t0 = null;
+  function loop(ts) {
+    if (t0 === null) t0 = ts;
+    var t = ((ts - t0) / 1000) % CYCLE, k = Math.min(ROWS.length, Math.floor(t / EVERY) + 1);
+    if (k !== last) { show(k); last = k; }
+    requestAnimationFrame(loop);
+  }
+  show(ROWS.length); setTimeout(function () { requestAnimationFrame(loop); }, 2500);
+})();
 </script>
 </body>
 </html>
