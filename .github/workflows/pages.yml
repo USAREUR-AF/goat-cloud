@@ -1,0 +1,98 @@
+# The goat-cloud landing page on GitHub Pages.
+#
+# The page is site/index.html: one static file with inline CSS and SVG. It shows
+# four screenshots, which this workflow copies from docs/img/screens/ so that the
+# repository keeps one copy of each.
+#
+# A pull request that touches the page builds it (the build job only). A push to
+# main builds it and, when GitHub Pages is enabled for this repository with
+# Settings > Pages > Source set to "GitHub Actions", deploys it. While Pages is
+# not enabled the build passes, prints a notice, and nothing is deployed.
+name: pages
+
+on:
+  pull_request:
+    paths:
+      - "site/**"
+      - "docs/img/screens/**"
+      - ".github/workflows/pages.yml"
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "docs/img/screens/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      deploy: ${{ steps.pages.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: assemble the site
+        run: |
+          mkdir -p _site/img
+          cp site/index.html _site/index.html
+          for n in overview findings repositories cost; do
+            cp "docs/img/screens/$n.png" "_site/img/$n.png"
+          done
+          # every image the page names must be in the site
+          grep -o 'src="img/[^"]*"' _site/index.html | sed 's/^src="//; s/"$//' | sort -u | while read -r f; do
+            test -f "_site/$f" || { echo "::error::site/index.html names $f, which the site does not contain"; exit 1; }
+          done
+
+      - name: is GitHub Pages enabled
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          elif gh api "repos/${GITHUB_REPOSITORY}/pages" > /dev/null 2>&1; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::GitHub Pages is not enabled for this repository; the site was built and not deployed."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.pages.outputs.deploy == 'true'
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - if: steps.pages.outputs.deploy == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    name: deploy
+    needs: build
+    if: needs.build.outputs.deploy == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
