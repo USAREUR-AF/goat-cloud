@@ -58,6 +58,10 @@ jobs:
             test -f "_site/$f" || { echo "::error::site/index.html names $f, which the site does not contain"; exit 1; }
           done
 
+      # no command box is cut off at 1440 or 390 px, and no output box at 1440 px (headless Chrome, on the runner)
+      - name: check the command boxes
+        run: python3 site/fitcheck.py _site index.html
+
       - name: is GitHub Pages enabled
         id: pages
         env:

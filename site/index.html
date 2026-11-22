@@ -65,14 +65,21 @@ p { margin: 0; text-wrap: pretty; }
 .btn:hover { text-decoration: underline; }
 
 .cmd { display: flex; align-items: stretch; background: var(--term-bg); color: var(--term-fg); border-radius: 3px; min-width: 0; max-width: 100%; }
-.cmd pre { margin: 0; padding: 12px 14px; overflow-x: auto; font-size: 14.5px; line-height: 1.5; flex: 1; min-width: 0; white-space: pre; }
+.cmd pre { margin: 0; padding: 12px 14px; overflow-x: auto; font-size: 14.5px; line-height: 1.5; flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+/* a command shows whole: it wraps at spaces, continuation lines hang two characters in */
+.cmd pre .ln { display: block; padding-left: 2ch; text-indent: -2ch; }
+/* a word with a hyphen or slash moves to the next line whole, and breaks only if it alone is wider than the box */
+pre .ln .w { display: inline-block; max-width: 100%; text-indent: 0; }
 .cmd code, .term code { background: none; padding: 0; color: inherit; font-size: inherit; }
 .copy { flex: none; border: 0; border-left: 1px solid #ffffff2b; background: transparent; color: var(--term-fg); font: 600 13px var(--mono); padding: 0 14px; cursor: pointer; min-width: 68px; }
 .copy:hover { background: #ffffff1a; }
 .copy:focus-visible { outline-color: var(--term-ok); outline-offset: -3px; }
 .hero .cmd { margin-top: 24px; }
 .term { background: var(--term-bg); color: var(--term-fg); border-radius: 3px; min-width: 0; }
-.term pre { margin: 0; padding: 14px; overflow-x: auto; font-size: 13px; line-height: 1.5; white-space: pre; }
+.term pre { margin: 0; padding: 14px; overflow-x: auto; font-size: 13px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+/* output wraps on a wide screen; on a narrow one it keeps its columns and scrolls inside its box */
+.term pre .ln { display: block; padding-left: var(--hang, 4ch); text-indent: calc(-1 * var(--hang, 4ch)); }
+@media (max-width: 860px) { .term pre { white-space: pre; overflow-wrap: normal; } .term pre .ln .w { display: inline; } }
 .term .c { color: var(--term-dim); }
 
 /* the tag: one resource's six facts, drawn as a tag with a punched hole */
@@ -318,8 +325,8 @@ figure.overview { margin-top: 44px; }
           <a class="btn" href="https://github.com/USAREUR-AF/goat-cloud/tree/main/docs">Docs</a>
         </p>
         <div class="cmd" role="group" aria-label="Run the dashboard on synthetic data">
-          <pre><code id="c-demo">git clone https://github.com/USAREUR-AF/goat-cloud &amp;&amp; cd goat-cloud
-pip install boto3 &amp;&amp; python3 demo/serve.py</code></pre>
+          <pre data-box="command"><code id="c-demo"><span class="ln">git clone <span class="w">https://github.com/USAREUR-AF/goat-cloud</span> &amp;&amp; cd <span class="w">goat-cloud</span>
+</span><span class="ln">pip install boto3 &amp;&amp; python3 <span class="w">demo/serve.py</span></span></code></pre>
           <button class="copy" type="button" data-copy="c-demo">Copy</button>
         </div>
         <p class="tagnote">The dashboard on synthetic data at <code>http://localhost:8888</code>. No cloud account, no credentials, no AWS call. Open source · Apache-2.0 · AWS, Azure, Google Cloud.</p>
@@ -506,22 +513,22 @@ pip install boto3 &amp;&amp; python3 demo/serve.py</code></pre>
         <h3>On your machine</h3>
         <p>The demo generates an invented estate and serves the dashboard against it. It needs Python 3.11 or newer and <code>boto3</code>, which the dashboard code imports.</p>
         <div class="term" role="img" aria-label="Terminal output of the demo generator: 152 resources, 29 findings: 16 high, 9 medium, 2 low, 2 info">
-<pre><span class="c">$ python3 demo/generate.py</span>
-152 resources, 29 findings {'HIGH': 16, 'MEDIUM': 9, 'LOW': 2, 'INFO': 2} -&gt; demo/data</pre>
+<pre style="--hang:4ch" data-box="output"><span class="ln"><span class="c">$ python3 <span class="w">demo/generate.py</span></span>
+</span><span class="ln">152 resources, 29 findings {'HIGH': 16, 'MEDIUM': 9, 'LOW': 2, 'INFO': 2} <span class="w">-&gt;</span> <span class="w">demo/data</span></span></pre>
         </div>
-        <p class="caption">Real output. Two of the 29 are notices of an expiry within 14 days, which the dashboard leaves out of its count of 27.</p>
+        <p class="caption">Real output. Two of the 29 are notices of an expiry within 14 days, which the dashboard leaves out of its count of 27. <span class="scrollhint">The output scrolls sideways.</span></p>
       </div>
       <div>
         <h3>In your AWS account</h3>
         <p>The quick start creates one Terraform root that tags its own resources, registers itself and deploys the scanner, runs one scan and downloads the report. It deletes nothing. The quick start allows about 20 minutes and states a cost under 1 USD a month at that size.</p>
-        <div class="cmd"><pre><code id="c-mod">module "compliance" {
-  source = "git::https://github.com/USAREUR-AF/goat-cloud.git//modules/aws/compliance-tags?ref=v0.1.0"
-
-  project         = "acme"
-  environment     = "dev"
-  repository_url  = "https://github.com/acme/example-repo"
-  lifecycle_value = "persistent"
-}</code></pre><button class="copy" type="button" data-copy="c-mod">Copy</button></div>
+        <div class="cmd"><pre data-box="command"><code id="c-mod"><span class="ln">module "compliance" {
+</span><span class="ln" style="padding-left:4ch;text-indent:-4ch">  source = <span class="w">"git::https://github.com/USAREUR-AF/goat-cloud.git//modules/aws/compliance-tags?ref=v0.1.0"</span>
+</span><span class="ln">
+</span><span class="ln" style="padding-left:4ch;text-indent:-4ch">  project         = "acme"
+</span><span class="ln" style="padding-left:4ch;text-indent:-4ch">  environment     = "dev"
+</span><span class="ln" style="padding-left:4ch;text-indent:-4ch">  repository_url  = <span class="w">"https://github.com/acme/example-repo"</span>
+</span><span class="ln" style="padding-left:4ch;text-indent:-4ch">  lifecycle_value = "persistent"
+</span><span class="ln">}</span></code></pre><button class="copy" type="button" data-copy="c-mod">Copy</button></div>
         <p class="caption">The tag module, from the onboarding guide. <a href="https://github.com/USAREUR-AF/goat-cloud/blob/main/docs/quickstart-aws.md">Quick start on AWS</a> · <a href="https://github.com/USAREUR-AF/goat-cloud/blob/main/docs/guides/onboard-a-repository.md">Bring a repository under the contract</a></p>
       </div>
     </div>
